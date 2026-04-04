@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FastTelecom.AvaloniaUI.Services;
 using System.ComponentModel;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace FastTelecom.AvaloniaUI.ViewModels
@@ -11,9 +12,16 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private readonly INavigationService _nav;
         private readonly CredentialStore    _credentials;
 
+        public string AppVersion { get; } =
+            typeof(MainWindowViewModel).Assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                ?.InformationalVersion
+                .Split('+')[0]
+                ?? "0.0.0";
+
         [ObservableProperty] private ViewModelBase _currentView = null!;
-        [ObservableProperty] private bool          _showShell;
-        [ObservableProperty] private string        _currentPageTitle = string.Empty;
+        [ObservableProperty] private bool _showShell;
+        [ObservableProperty] private string _currentPageTitle = string.Empty;
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsOverlayVisible))]
         private bool _isPageLoading;
