@@ -1,0 +1,121 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FastTelecom.AvaloniaUI.Services;
+using System.ComponentModel;
+using System.Threading.Tasks;
+
+namespace FastTelecom.AvaloniaUI.ViewModels
+{
+    public partial class MainWindowViewModel : ViewModelBase
+    {
+        private readonly INavigationService _nav;
+        private readonly CredentialStore    _credentials;
+
+        [ObservableProperty] private ViewModelBase _currentView = null!;
+        [ObservableProperty] private bool          _showShell;
+        [ObservableProperty] private string        _currentPageTitle = string.Empty;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsOverlayVisible))]
+        private bool _isPageLoading;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsOverlayVisible))]
+        private bool _isPageFailed;
+
+        [ObservableProperty] private string _pageLoadingMessage = string.Empty;
+
+        public bool IsOverlayVisible => IsPageLoading || IsPageFailed;
+
+        private PageLoadViewModelBase? _trackedPage;
+
+
+        public MainWindowViewModel(INavigationService nav, CredentialStore credentials)
+        {
+            _nav         = nav;
+            _credentials = credentials;
+            _nav.StateChanged += OnNavigationChanged;
+        }
+
+
+        public void NavigateToLogin() => _nav.NavigateToLogin();
+
+        public async Task TryAutoLoginAsync(string username, string password)
+        {
+            _nav.NavigateToLogin();
+            if (_nav.CurrentView is LoginViewModel loginVm)
+                await loginVm.TryAutoLoginAsync(username, password);
+        }
+
+        private void OnNavigationChanged()
+        {
+            if (_trackedPage is not null)
+                _trackedPage.PropertyChanged -= OnTrackedPagePropertyChanged;
+
+            CurrentView = _nav.CurrentView;
+            ShowShell   = _nav.ShowShell;
+
+            _trackedPage = CurrentView as PageLoadViewModelBase;
+
+            if (_trackedPage is not null)
+            {
+                _trackedPage.PropertyChanged += OnTrackedPagePropertyChanged;
+                SyncOverlayState();
+            }
+            else
+            {
+                IsPageLoading      = false;
+                IsPageFailed       = false;
+                PageLoadingMessage = string.Empty;
+            }
+
+            CurrentPageTitle = CurrentView switch
+            {
+                DashboardViewModel     => "Dashboard",
+                BundlesViewModel       => "Bundles",
+                ActiveBundlesViewModel => "My Bundles",
+                LoginViewModel         => "Sign In",
+                _                      => string.Empty,
+            };
+        }
+
+        private void OnTrackedPagePropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName is
+                nameof(PageLoadViewModelBase.IsLoading) or
+                nameof(PageLoadViewModelBase.HasFailed) or
+                nameof(PageLoadViewModelBase.LoadingMessage))
+            {
+                SyncOverlayState();
+            }
+        }
+
+        private void SyncOverlayState()
+        {
+            if (_trackedPage is null) return;
+            IsPageLoading      = _trackedPage.IsLoading;
+            IsPageFailed       = _trackedPage.HasFailed;
+            PageLoadingMessage = _trackedPage.LoadingMessage;
+        }
+
+        [RelayCommand]
+        private void NavigateToDashboard() => _nav.NavigateTo<DashboardViewModel>();
+
+        [RelayCommand]
+        private void NavigateToBundles() =>
+            _nav.NavigateTo<BundlesViewModel>(vm => _ = vm.LoadAsync());
+
+        [RelayCommand]
+        private void NavigateToActiveBundles() =>
+            _nav.NavigateTo<ActiveBundlesViewModel>(vm => _ = vm.LoadAsync());
+
+        [RelayCommand]
+        private void Logout()
+        {
+            _credentials.Clear();
+            _nav.NavigateToLogin();
+        }
+
+        [RelayCommand]
+        private void RetryPage() => _trackedPage?.RetryLoad();
+    }
+}

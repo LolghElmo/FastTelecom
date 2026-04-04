@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- Windows exe icon — only wired up once you've run Assets\Make-Icon.ps1 -->
+    <ApplicationIcon Condition="Exists('Assets\icon.ico')">Assets\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.11" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.11" />
+    <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.11">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastTelecom.Application\FastTelecom.Application.csproj" />
+    <ProjectReference Include="..\FastTelecom.Infrastructure\FastTelecom.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- Embed PNGs from Assets\ as Avalonia resources (loaded at runtime on all platforms).
+       Exclude .ico and .ps1 — ICOs are a Windows exe-only concern, not runtime resources. -->
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" Exclude="Assets\*.ps1;Assets\*.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\ActiveBundlesView.axaml.cs">
+      <DependentUpon>ActiveBundlesView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\BundlesView.axaml.cs">
+      <DependentUpon>BundlesView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\DashboardView.axaml.cs">
+      <DependentUpon>DashboardView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\MainWindow.axaml.cs">
+      <DependentUpon>MainWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\LoginView.axaml.cs">
+      <DependentUpon>LoginView.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>

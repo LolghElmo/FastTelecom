@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FastTelecom.AvaloniaUI.ViewModels"
+             x:Class="FastTelecom.AvaloniaUI.Views.BundlesView"
+             x:DataType="vm:BundlesViewModel">
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Spacing="0">
+            <Border Padding="32,12"
+                    Background="{StaticResource SuccessBrush}"
+                    IsVisible="{Binding StatusMessage,
+                        Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="White" FontWeight="Medium" FontSize="13" />
+            </Border>
+            <Border Padding="32,12"
+                    Background="{StaticResource DangerBrush}"
+                    IsVisible="{Binding ErrorMessage,
+                        Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <TextBlock Text="{Binding ErrorMessage}"
+                           Foreground="White" FontWeight="Medium" FontSize="13"
+                           TextWrapping="Wrap" />
+            </Border>
+            <Border Padding="32,12"
+                    Background="{StaticResource AccentBrush}"
+                    IsVisible="{Binding IsPurchasing}">
+                <TextBlock Text="Processing your purchase, please wait…"
+                           Foreground="White" FontWeight="Medium" FontSize="13" />
+            </Border>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1" Padding="32,24,32,24">
+            <ItemsControl x:Name="BundlesList" ItemsSource="{Binding Bundles}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <!-- To be reviewed later -->
+                        <UniformGrid /> 
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:CompileBindings="False">
+                        <Border Classes="bundle-card" Width="200" Margin="0,0,16,16">
+                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Text="{Binding VolGb, StringFormat='{}{0} GB'}"
+                                           FontSize="28" FontWeight="Bold"
+                                           Foreground="{StaticResource AccentBrush}"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,4" />
+
+                                <TextBlock Grid.Row="1"
+                                           Text="{Binding Name}"
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="0,0,0,12" />
+
+                                <Border Grid.Row="2"
+                                        Background="{StaticResource SurfaceBrush}"
+                                        CornerRadius="6"
+                                        Padding="8,6"
+                                        HorizontalAlignment="Stretch"
+                                        Margin="0,0,0,12">
+                                    <TextBlock Text="{Binding Price, StringFormat='SP {0:N0}'}"
+                                               FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimaryBrush}"
+                                               HorizontalAlignment="Center" />
+                                </Border>
+                                <Button Grid.Row="3"
+                                        Classes="buy-btn"
+                                        Content="Buy"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Center"
+                                        Command="{Binding #BundlesList.DataContext.PurchaseCommand}"
+                                        CommandParameter="{Binding}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <TextBlock Grid.Row="1"
+                   IsVisible="{Binding ShowEmptyState}"
+                   Text="No bundles available."
+                   FontSize="15"
+                   Foreground="{StaticResource TextMutedBrush}"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+    </Grid>
+    <UserControl.Styles>
+        <Style Selector="Border.bundle-card">
+            <Setter Property="Background"      Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="12" />
+            <Setter Property="Padding"         Value="20,18" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
+                    <BoxShadowsTransition          Property="BoxShadow"       Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.bundle-card:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.025)" />
+            <Setter Property="BoxShadow"       Value="0 4 20 0 #1A000000" />
+        </Style>
+        <Style Selector="Button.buy-btn">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding"      Value="0,10" />
+            <Setter Property="FontWeight"   Value="Medium" />
+            <Setter Property="Cursor"       Value="Hand" />
+        </Style>
+        <Style Selector="Button.buy-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.buy-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.buy-btn:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BorderBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+        </Style>
+    </UserControl.Styles>
+</UserControl>

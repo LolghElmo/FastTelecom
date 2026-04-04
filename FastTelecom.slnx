@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="FastTelecom.Application/FastTelecom.Application.csproj" Id="86445110-7eff-43bf-b2e0-abcd067f5ce6" />
+    <Project Path="FastTelecom.Core/FastTelecom.Domain.csproj" Id="b87f111a-7e32-4a00-9c7b-6e4f8c4f001c" />
+    <Project Path="FastTelecom.Infrastructure/FastTelecom.Infrastructure.csproj" Id="baaca455-7293-476a-8d5e-0bdc9d78f481" />
+  </Folder>
+  <Folder Name="/src/ui/">
+    <Project Path="FastTelecom.AvaloniaUI/FastTelecom.AvaloniaUI.csproj" Id="4b8b0dac-54e3-4534-af7d-4771b0c3e329" />
+  </Folder>
+  <Folder Name="/tests/" />
+</Solution>

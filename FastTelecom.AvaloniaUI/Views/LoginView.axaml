@@ -1,0 +1,183 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FastTelecom.AvaloniaUI.ViewModels"
+             x:Class="FastTelecom.AvaloniaUI.Views.LoginView"
+             x:DataType="vm:LoginViewModel">
+    <Grid RowDefinitions="*,Auto,*"
+          ColumnDefinitions="*,Auto,*"
+          Background="{StaticResource SurfaceBrush}">
+        <Border Grid.Row="1" Grid.Column="1"
+                Classes="login-card"
+                MinWidth="400"
+                Padding="44,40">
+            <StackPanel Spacing="0">
+                <StackPanel HorizontalAlignment="Center" Spacing="6" Margin="0,0,0,32">
+                    <Image Source="avares://FastTelecom.AvaloniaUI/Assets/icon-256.png"
+                           Width="64" Height="64"
+                           HorizontalAlignment="Center" />
+                    <TextBlock Text="FastTelecom"
+                               FontSize="22" FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center"
+                               Margin="0,8,0,0" />
+                    <TextBlock Text="Self-Service Portal"
+                               FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Spacing="16">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Username"
+                                   FontSize="13" FontWeight="Medium"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBox x:Name="UsernameBox"
+                                 Text="{Binding Username, Mode=TwoWay}"
+                                 Watermark="Enter your username"
+                                 FontSize="14"
+                                 CornerRadius="8"
+                                 Padding="12,11"
+                                 KeyDown="UsernameBox_KeyDown" />
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Password"
+                                   FontSize="13" FontWeight="Medium"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBox x:Name="PasswordBox"
+                                 Text="{Binding Password, Mode=TwoWay}"
+                                 PasswordChar="&#x2022;"
+                                 Watermark="Enter your password"
+                                 FontSize="14"
+                                 CornerRadius="8"
+                                 Padding="12,11"
+                                 KeyDown="PasswordBox_KeyDown" />
+                    </StackPanel>
+                    <CheckBox IsChecked="{Binding RememberMe, Mode=TwoWay}"
+                              Cursor="Hand"
+                              Margin="2,0,0,0">
+                        <TextBlock Text="Remember me on this device"
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                    </CheckBox>
+                    <Border IsVisible="{Binding ErrorMessage,
+                                Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Background="#FEF2F2"
+                            BorderBrush="#FECACA"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,10">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="⚠"
+                                       FontSize="14"
+                                       Foreground="{StaticResource DangerBrush}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding ErrorMessage}"
+                                       Foreground="{StaticResource DangerBrush}"
+                                       FontSize="13"
+                                       TextWrapping="Wrap"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border IsVisible="{Binding ShowAttemptMessage}"
+                            Background="#EFF6FF"
+                            BorderBrush="#BFDBFE"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="12,10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                                <Ellipse Classes="dot-1" Width="7" Height="7" />
+                                <Ellipse Classes="dot-2" Width="7" Height="7" />
+                                <Ellipse Classes="dot-3" Width="7" Height="7" />
+                            </StackPanel>
+                            <TextBlock Text="{Binding AttemptMessage}"
+                                       FontSize="13"
+                                       Foreground="{StaticResource AccentBrush}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Button Command="{Binding LoginCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            CornerRadius="8"
+                            Padding="0,13"
+                            FontWeight="SemiBold"
+                            FontSize="14"
+                            Classes="login-btn"
+                            Margin="0,4,0,0">
+                        <Panel>
+                            <TextBlock Text="Sign in"
+                                       IsVisible="{Binding !IsLoading}"
+                                       HorizontalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" Spacing="8"
+                                        IsVisible="{Binding IsLoading}"
+                                        HorizontalAlignment="Center">
+                                <Ellipse Classes="dot-w1" Width="8" Height="8" />
+                                <Ellipse Classes="dot-w2" Width="8" Height="8" />
+                                <Ellipse Classes="dot-w3" Width="8" Height="8" />
+                            </StackPanel>
+                        </Panel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+    <UserControl.Styles>
+        <Style Selector="Border.login-card">
+            <Setter Property="Background"      Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="16" />
+            <Setter Property="BoxShadow"       Value="0 4 32 0 #12000000, 0 1 4 0 #08000000" />
+        </Style>
+
+        <Style Selector="Button.login-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.login-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.login-btn:disabled /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Opacity"    Value="0.55" />
+        </Style>
+        <Style Selector="Ellipse.dot-w1">
+            <Setter Property="Fill" Value="White" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse.dot-w2">
+            <Setter Property="Fill" Value="White" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite" Delay="0:0:0.22">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse.dot-w3">
+            <Setter Property="Fill" Value="White" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite" Delay="0:0:0.44">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.35" /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+</UserControl>

@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:FastTelecom.AvaloniaUI.ViewModels"
+             x:Class="FastTelecom.AvaloniaUI.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <ScrollViewer Padding="32,24">
+        <StackPanel Spacing="24">
+            <Border x:Name="StatusBanner"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    BorderThickness="1">
+                <Border.Styles>
+                    <Style Selector="Border#StatusBanner">
+                        <Setter Property="Background" Value="{StaticResource CardBrush}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+                    </Style>
+                </Border.Styles>
+
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
+                        <Border CornerRadius="20"
+                                Padding="14,6"
+                                Background="{StaticResource SuccessBrush}"
+                                IsVisible="{Binding IsActive}">
+                            <TextBlock Text="Active" FontSize="12" FontWeight="Medium"
+                                       Foreground="White" />
+                        </Border>
+                        <Border CornerRadius="20"
+                                Padding="14,6"
+                                Background="{StaticResource DangerBrush}"
+                                IsVisible="{Binding !IsActive}">
+                            <TextBlock Text="Inactive" FontSize="12" FontWeight="Medium"
+                                       Foreground="White" />
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding SubscriberId}"
+                                   FontSize="18" FontWeight="SemiBold"
+                                   Foreground="{StaticResource TextPrimaryBrush}" />
+                        <TextBlock Text="{Binding UserProfile, StringFormat='Profile: {0}'}"
+                                   FontSize="13"
+                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <UniformGrid Columns="3" Rows="3">
+
+                <Border Classes="info-card" Margin="0,0,12,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="IP Address" Classes="card-label" />
+                        <TextBlock Text="{Binding IpAddress}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="6,0,6,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Contact" Classes="card-label" />
+                        <TextBlock Text="{Binding ContactPhone}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="12,0,0,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Charging type" Classes="card-label" />
+                        <TextBlock Text="{Binding ChargingType}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="0,0,12,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Max sessions" Classes="card-label" />
+                        <TextBlock Text="{Binding MaxSessions}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="6,0,6,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Effective from" Classes="card-label" />
+                        <TextBlock Text="{Binding EffectTime}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="12,0,0,12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Expires" Classes="card-label" />
+                        <TextBlock Text="{Binding ExpireTime}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="0,0,12,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="First used" Classes="card-label" />
+                        <TextBlock Text="{Binding FirstUseTime}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="6,0,6,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Last used" Classes="card-label" />
+                        <TextBlock Text="{Binding LastUseEndTime}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+                <Border Classes="info-card" Margin="12,0,0,0">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Status code" Classes="card-label" />
+                        <TextBlock Text="{Binding Status}" Classes="card-value" />
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+        </StackPanel>
+    </ScrollViewer>
+    <UserControl.Styles>
+        <Style Selector="Border.info-card">
+            <Setter Property="Background" Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="20,16" />
+        </Style>
+        <Style Selector="TextBlock.card-label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+        <Style Selector="TextBlock.card-value">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        </Style>
+    </UserControl.Styles>
+</UserControl>
