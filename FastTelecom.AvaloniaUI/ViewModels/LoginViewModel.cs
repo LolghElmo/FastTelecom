@@ -12,8 +12,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
     public partial class LoginViewModel : ViewModelBase
     {
         private readonly AuthenticationService _authService;
-        private readonly INavigationService    _nav;
-        private readonly CredentialStore       _credentials;
+        private readonly INavigationService _nav;
+        private readonly CredentialStore _credentials;
 
         private const int MaxAttempts  = 5;
         private const int RetryDelayMs = 1500;

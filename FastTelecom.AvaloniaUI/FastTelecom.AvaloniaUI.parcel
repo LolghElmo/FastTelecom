@@ -2,13 +2,10 @@
     "GeneralSettings": {
         "NetProjectPath": "FastTelecom.AvaloniaUI.csproj",
         "ApplicationName": "FastTelecom",
-        "Version": {
-            "$type": "msbuild",
-            "property": "Version"
-        },
+        "Version": "0.1.0",
         "PackageName": {
             "$type": "msbuild",
-            "property": "AssemblyName"
+            "property": "FastTelecom"
         },
         "AssemblyName": {
             "$type": "msbuild",
@@ -19,8 +16,7 @@
         "CreateBinSymlink": "True"
     },
     "Win32Settings": {
-        "InstallerIcon": "Assets/icon.ico",
-        "Company": "LolghElmo",
+        "InstallerIcon": "../../../../Downloads/icon.ico",
         "IncludeUninstaller": "True"
     },
     "MacOsSettings": {
@@ -30,6 +26,9 @@
     },
     "PublishSettings": {
         "PublishSingleFile": "True",
+        "PublishTrimmed": "True",
+        "PublishAot": "True",
+        "PublishReadyToRun": "True",
         "ExtraBuildProperties": {}
     }
 }
