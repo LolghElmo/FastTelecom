@@ -26,7 +26,8 @@
       "enum": [
         "Clean",
         "Compile",
-        "Restore"
+        "Restore",
+        "Test"
       ]
     },
     "Verbosity": {
@@ -107,6 +108,9 @@
             "Debug",
             "Release"
           ]
+        },
+        "IgnoreFailedSources": {
+          "type": "boolean"
         },
         "Solution": {
           "type": "string",
