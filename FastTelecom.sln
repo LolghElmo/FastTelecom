@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11626.88 stable
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastTelecom.Application", "FastTelecom.Application\FastTelecom.Application.csproj", "{98A95BF7-1D72-60F6-40F6-2523332259BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastTelecom.Domain", "FastTelecom.Core\FastTelecom.Domain.csproj", "{487BB08C-C157-C0BB-1162-903A80CB5DB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastTelecom.Infrastructure", "FastTelecom.Infrastructure\FastTelecom.Infrastructure.csproj", "{46DE2991-6017-CE8A-B1DF-1287D19B9B1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ui", "ui", "{BBB7B94B-6E11-D9F1-7BA6-9ECA82DB22BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastTelecom.AvaloniaUI", "FastTelecom.AvaloniaUI\FastTelecom.AvaloniaUI.csproj", "{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{D00A227C-0FF5-41AE-B65D-D42D67C9A7AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D00A227C-0FF5-41AE-B65D-D42D67C9A7AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D00A227C-0FF5-41AE-B65D-D42D67C9A7AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A95BF7-1D72-60F6-40F6-2523332259BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98A95BF7-1D72-60F6-40F6-2523332259BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98A95BF7-1D72-60F6-40F6-2523332259BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98A95BF7-1D72-60F6-40F6-2523332259BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{487BB08C-C157-C0BB-1162-903A80CB5DB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{487BB08C-C157-C0BB-1162-903A80CB5DB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{487BB08C-C157-C0BB-1162-903A80CB5DB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{487BB08C-C157-C0BB-1162-903A80CB5DB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46DE2991-6017-CE8A-B1DF-1287D19B9B1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46DE2991-6017-CE8A-B1DF-1287D19B9B1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46DE2991-6017-CE8A-B1DF-1287D19B9B1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46DE2991-6017-CE8A-B1DF-1287D19B9B1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98A95BF7-1D72-60F6-40F6-2523332259BB} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{487BB08C-C157-C0BB-1162-903A80CB5DB8} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{46DE2991-6017-CE8A-B1DF-1287D19B9B1C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{BBB7B94B-6E11-D9F1-7BA6-9ECA82DB22BF} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{2E06FE3C-759D-6BE5-C4A0-5B9A6EEB4EAD} = {BBB7B94B-6E11-D9F1-7BA6-9ECA82DB22BF}
+	EndGlobalSection
+EndGlobal
