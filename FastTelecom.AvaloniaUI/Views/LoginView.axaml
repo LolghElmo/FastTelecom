@@ -12,7 +12,7 @@
                 Padding="44,40">
             <StackPanel Spacing="0">
                 <StackPanel HorizontalAlignment="Center" Spacing="6" Margin="0,0,0,32">
-                    <Image Source="avares://FastTelecom.AvaloniaUI/Assets/icon-256.png"
+                    <Image Source="avares://FastTelecom/Assets/icon-256.png"
                            Width="64" Height="64"
                            HorizontalAlignment="Center" />
                     <TextBlock Text="FastTelecom"
