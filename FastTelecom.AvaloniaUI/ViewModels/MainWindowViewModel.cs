@@ -12,6 +12,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private readonly INavigationService _nav;
         private readonly CredentialStore    _credentials;
 
+        public UpdateViewModel Update { get; } = new();
+
         public string AppVersion { get; } =
             typeof(MainWindowViewModel).Assembly
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()

@@ -67,6 +67,72 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
+                        <Border DockPanel.Dock="Bottom" Padding="8,0,8,8">
+                            <StackPanel Spacing="4">
+                                <Border IsVisible="{Binding Update.IsUpdateAvailable}"
+                                        Background="#1E3A5F"
+                                        CornerRadius="8"
+                                        Padding="12,10">
+                                    <StackPanel Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <TextBlock Text="↑"
+                                                       Foreground="#60A5FA"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Text="Update available"
+                                                       Foreground="White"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Update.AvailableVersion, StringFormat='v{0}'}"
+                                                   Foreground="#93C5FD"
+                                                   FontSize="11" />
+                                        <Button Command="{Binding Update.ApplyUpdateCommand}"
+                                                HorizontalAlignment="Stretch"
+                                                HorizontalContentAlignment="Center"
+                                                Padding="0,7"
+                                                CornerRadius="6"
+                                                Background="#2563EB"
+                                                Foreground="White"
+                                                FontSize="12"
+                                                FontWeight="Medium"
+                                                Cursor="Hand">
+                                            <Panel>
+                                                <TextBlock Text="Install &amp; restart"
+                                                           IsVisible="{Binding !Update.IsApplyingUpdate}"
+                                                           HorizontalAlignment="Center" />
+                                                <TextBlock Text="Installing..."
+                                                           IsVisible="{Binding Update.IsApplyingUpdate}"
+                                                           HorizontalAlignment="Center" />
+                                            </Panel>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                                <Button Command="{Binding Update.CheckForUpdatesCommand}"
+                                        Classes="nav-item"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="&#x27F3;"
+                                                   FontSize="15"
+                                                   Foreground="{StaticResource SidebarTextBrush}" />
+                                        <Panel>
+                                            <TextBlock Text="Check for updates"
+                                                       IsVisible="{Binding !Update.IsCheckingForUpdates}"
+                                                       Foreground="{StaticResource SidebarTextBrush}"
+                                                       FontSize="13" />
+                                            <TextBlock Text="Checking..."
+                                                       IsVisible="{Binding Update.IsCheckingForUpdates}"
+                                                       Foreground="{StaticResource SidebarTextBrush}"
+                                                       FontSize="13" />
+                                        </Panel>
+                                    </StackPanel>
+                                </Button>
+
+                            </StackPanel>
+                        </Border>
+
                         <Border DockPanel.Dock="Bottom" Padding="8,0,8,16">
                             <Button Command="{Binding LogoutCommand}"
                                     Classes="nav-item"
