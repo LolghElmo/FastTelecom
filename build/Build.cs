@@ -17,7 +17,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
     "CI",
     GitHubActionsImage.UbuntuLatest,
     On = new[] { GitHubActionsTrigger.Push },
-    InvokedTargets = new[] { nameof(Compile) }
+    InvokedTargets = new[] { nameof(Test) }
 )]
 class Build : NukeBuild
 { 
@@ -33,28 +33,43 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
     [Solution] readonly Solution Solution;
-
+    [Parameter] readonly bool IgnoreFailedSources = true;
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
         {
-            DotNetClean(s => s.SetProject(Solution));
+            DotNetClean(_ => _.
+            SetProject(Solution));
         });
 
     Target Restore => _ => _
         .Executes(() =>
         {
-            DotNetRestore(s => s.SetProjectFile(Solution));
+            DotNetRestore(_ => _
+            .SetProjectFile(Solution)
+            .SetIgnoreFailedSources(IgnoreFailedSources));
         });
 
     Target Compile => _ => _
         .DependsOn(Restore)
         .Executes(() =>
         {
-            DotNetBuild(s => s
+            DotNetBuild(_ => _
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore());
         });
+
+    Target Test => _ => _
+    .DependsOn(Compile)
+    .Executes(() =>
+    {
+        DotNetTest(_ => _
+            .SetProjectFile(Solution)
+            .SetConfiguration(Configuration)
+            .EnableNoRestore()
+            .EnableNoBuild());
+    });
+
 
 }

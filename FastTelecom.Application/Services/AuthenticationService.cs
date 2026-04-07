@@ -27,6 +27,7 @@ namespace FastTelecom.Application.Services
 
             if (string.IsNullOrWhiteSpace(request.Password))
                 return LoginResultDto.Fail("Password is required.");
+
             var response = await _tarasClient.LoginAsync(
                 request.Username,
                 request.Password,

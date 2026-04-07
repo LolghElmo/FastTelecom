@@ -115,6 +115,8 @@ namespace FastTelecom.Application.Services
             catch (Exception ex) { return ActiveBundlesResultDto.Fail(ex.Message); }
         }
 
+
+        // TODO: might need to replace this whole mess 
         private static ActiveBundleDto MapBundle(Domain.Models.ActiveBundle b)
         {
             bool isUnlimited = b.MaxServiceUsage <= 0;
