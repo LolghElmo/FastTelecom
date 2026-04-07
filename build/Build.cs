@@ -17,7 +17,8 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
     "FT CI",
     GitHubActionsImage.UbuntuLatest,
     On = new[] { GitHubActionsTrigger.Push },
-    InvokedTargets = new[] { nameof(Compile) }
+    InvokedTargets = new[] { nameof(Compile) },
+    AutoGenerate = false
 )]
 class Build : NukeBuild
 {
