@@ -87,9 +87,18 @@ class Build : NukeBuild
         .Requires(() => Version)
         .Executes(() =>
         {
+            // Velopack package 
             ProcessTasks.StartProcess(
                 "vpk",
                 $"pack --packId FastTelecom --packVersion {Version} --packDir {PublishDir} --outputDir {ReleasesDir}",
+                workingDirectory: RootDirectory
+            ).AssertZeroExitCode();
+
+            // Inno Setup installer
+            var issFile = RootDirectory / "build" / "installer.iss";
+            ProcessTasks.StartProcess(
+                "iscc",
+                $"/Qp /DMyAppVersion={Version} \"{issFile}\"",
                 workingDirectory: RootDirectory
             ).AssertZeroExitCode();
         });

@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0  # full history so MinVer can read tags
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -24,6 +24,9 @@ jobs:
 
       - name: Install Velopack CLI
         run: dotnet tool install -g vpk
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
 
       - name: Extract version from tag
         id: version
