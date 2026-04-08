@@ -11,6 +11,20 @@ Built with the help of:
 ![Velopack](https://img.shields.io/badge/Velopack-00B4D8?style=for-the-badge&logoColor=white)
 ![Nuke](https://img.shields.io/badge/Nuke_Build-1E1E2E?style=for-the-badge&logoColor=white)
 
+--- 
+
+## Why FastTelecom?
+
+The official Syrian Telecom self-service portal is slow, unreliable, and has a dated interface. Pages take a long time to load, the UI is cluttered, and requests frequently fail without clear feedback.
+
+FastTelecom was built to fix that:
+
+- **Faster experience**: a desktop app with no browser overhead
+- **Cleaner UI**: modern design instead of the buggy and awful User Interface.
+- **Reliable connections**: built-in retry logic that automatically reattempts failed requests up to 5 times, so you don't have to keep refreshing
+- **Automatic updates**: the app keeps itself up to date without you doing anything
+- **I WILL REMEMBER YOU!**: The app will remember you with a tick of a button.
+
 ---
 
 ## Architecture
