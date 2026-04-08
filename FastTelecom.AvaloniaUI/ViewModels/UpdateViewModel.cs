@@ -9,9 +9,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 {
     public partial class UpdateViewModel : ViewModelBase
     {
-        private const string UpdateSource = @"C:/Temp/DemoServer/";
-
-        private readonly UpdateManager _updateManager = new(new SimpleFileSource(new System.IO.DirectoryInfo(UpdateSource)));
+        private readonly UpdateManager _updateManager = new(
+            new GithubSource("https://github.com/LolghElmo/FastTelecom", null, false));
         private UpdateInfo? _pendingUpdate;
 
         [ObservableProperty]
