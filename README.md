@@ -6,15 +6,6 @@ Built with the help of .NET 10 & Avalonia UI.
 
 ---
 
-## Screenshots
-
-<img width="450" alt="My Bundles" src="https://github.com/user-attachments/assets/93c7174a-0af1-47ec-a093-df08e7ca370f" />
-<img width="450" alt="Bundles" src="https://github.com/user-attachments/assets/7bd4005c-7613-4d4d-adcf-20648ef74c45" />
-<img width="450" alt="login" src="https://github.com/user-attachments/assets/507f747b-c922-4e41-98b1-d963be514c4e" />
-<img width="450" height="660" alt="image" src="https://github.com/user-attachments/assets/0d09fd6e-beea-46d6-bd89-17053e8fbed2" />
-
----
-
 ## Architecture
 
 The project follows a **Clean Architecture**(Layered/Onion) pattern with four layers, each as its own .NET project:
