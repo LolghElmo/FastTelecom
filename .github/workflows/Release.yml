@@ -25,9 +25,6 @@ jobs:
       - name: Install Velopack CLI
         run: dotnet tool install -g vpk
 
-      - name: Install Inno Setup
-        run: choco install innosetup -y --no-progress
-
       - name: Extract version from tag
         id: version
         shell: bash

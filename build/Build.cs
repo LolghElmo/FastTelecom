@@ -94,12 +94,5 @@ class Build : NukeBuild
                 workingDirectory: RootDirectory
             ).AssertZeroExitCode();
 
-            // Inno Setup installer
-            var issFile = RootDirectory / "build" / "installer.iss";
-            ProcessTasks.StartProcess(
-                "iscc",
-                $"/Qp /DMyAppVersion={Version} \"{issFile}\"",
-                workingDirectory: RootDirectory
-            ).AssertZeroExitCode();
         });
 }
