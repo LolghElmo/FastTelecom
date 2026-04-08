@@ -2,7 +2,14 @@
 
 A self-service desktop portal for Syrian Telecom. View your account, browse available internet bundles, monitor active subscriptions, and purchase new bundles all using a desktop app with automatic updates.
 
-Built with the help of .NET 10 & Avalonia UI.
+Built with the help of:
+
+![.NET](https://img.shields.io/badge/.NET_10-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Avalonia](https://img.shields.io/badge/Avalonia_UI-8B44AC?style=for-the-badge&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![xUnit](https://img.shields.io/badge/xUnit-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+![Velopack](https://img.shields.io/badge/Velopack-00B4D8?style=for-the-badge&logoColor=white)
+![Nuke](https://img.shields.io/badge/Nuke_Build-1E1E2E?style=for-the-badge&logoColor=white)
 
 ---
 
