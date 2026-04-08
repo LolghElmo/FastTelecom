@@ -38,18 +38,18 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
         public LoginViewModel(
             AuthenticationService authService,
-            INavigationService    nav,
-            CredentialStore       credentials)
+            INavigationService nav,
+            CredentialStore credentials)
         {
             _authService = authService;
-            _nav         = nav;
+            _nav = nav;
             _credentials = credentials;
         }
 
         public async Task TryAutoLoginAsync(string username, string password)
         {
-            Username   = username;
-            Password   = password;
+            Username = username;
+            Password = password;
             RememberMe = true;
             await RunLoginLoopAsync(CancellationToken.None);
         }
@@ -66,9 +66,9 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
         private async Task RunLoginLoopAsync(CancellationToken ct)
         {
-            ErrorMessage   = null;
+            ErrorMessage = null;
             AttemptMessage = string.Empty;
-            IsLoading      = true;
+            IsLoading = true;
             LoginCommand.NotifyCanExecuteChanged();
 
             try
@@ -127,7 +127,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             catch (OperationCanceledException) { }
             finally
             {
-                IsLoading      = false;
+                IsLoading = false;
                 AttemptMessage = string.Empty;
                 LoginCommand.NotifyCanExecuteChanged();
             }

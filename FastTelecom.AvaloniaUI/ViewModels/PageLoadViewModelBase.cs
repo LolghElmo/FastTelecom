@@ -8,9 +8,9 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 {
     public abstract partial class PageLoadViewModelBase : ViewModelBase
     {
-        private const int MaxAttempts          = 5;
+        private const int MaxAttempts = 5;
         private const int ShowOverlayThresholdMs = 400;   
-        private const int RetryDelayMs          = 1500;
+        private const int RetryDelayMs = 1500;
 
         [ObservableProperty] private bool   _isLoading;
         [ObservableProperty] private bool   _hasFailed;
@@ -63,9 +63,18 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                         await Task.Delay(RetryDelayMs, ct);
 
                         bool ok;
-                        try   { ok = await FetchAsync(ct); }
-                        catch (OperationCanceledException) { throw; }
-                        catch { ok = false; }
+                        try
+                        {
+                            ok = await FetchAsync(ct);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            throw;
+                        }
+                        catch
+                        { 
+                            ok = false;
+                        }
 
                         if (ok) { succeeded = true; break; }
                     }

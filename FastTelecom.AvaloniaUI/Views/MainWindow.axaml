@@ -24,9 +24,16 @@
                     <DockPanel>
                         <Border DockPanel.Dock="Top" Padding="20,24,20,20">
                             <StackPanel Spacing="2">
-                                <TextBlock Text="FastTelecom"
-                                           FontSize="18" FontWeight="SemiBold"
-                                           Foreground="White" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="FastTelecom"
+                                               FontSize="18" FontWeight="SemiBold"
+                                               Foreground="White" />
+                                    <Ellipse Width="8" Height="8"
+                                             Fill="#34D399"
+                                             VerticalAlignment="Center"
+                                             IsVisible="{Binding Update.IsUpdateAvailable}"
+                                             ToolTip.Tip="Update available" />
+                                </StackPanel>
                                 <TextBlock Text="{Binding AppVersion, StringFormat='v{0}'}"
                                            FontSize="11"
                                            Foreground="{StaticResource SidebarTextBrush}" />
@@ -67,70 +74,28 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                        <Border DockPanel.Dock="Bottom" Padding="8,0,8,8">
-                            <StackPanel Spacing="4">
-                                <Border IsVisible="{Binding Update.IsUpdateAvailable}"
-                                        Background="#1E3A5F"
-                                        CornerRadius="8"
-                                        Padding="12,10">
-                                    <StackPanel Spacing="8">
-                                        <StackPanel Orientation="Horizontal" Spacing="6">
-                                            <TextBlock Text="↑"
-                                                       Foreground="#60A5FA"
-                                                       FontSize="13"
-                                                       FontWeight="SemiBold"
-                                                       VerticalAlignment="Center" />
-                                            <TextBlock Text="Update available"
-                                                       Foreground="White"
-                                                       FontSize="12"
-                                                       FontWeight="SemiBold" />
-                                        </StackPanel>
-                                        <TextBlock Text="{Binding Update.AvailableVersion, StringFormat='v{0}'}"
-                                                   Foreground="#93C5FD"
-                                                   FontSize="11" />
-                                        <Button Command="{Binding Update.ApplyUpdateCommand}"
-                                                HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Center"
-                                                Padding="0,7"
-                                                CornerRadius="6"
-                                                Background="#2563EB"
-                                                Foreground="White"
-                                                FontSize="12"
-                                                FontWeight="Medium"
-                                                Cursor="Hand">
-                                            <Panel>
-                                                <TextBlock Text="Install &amp; restart"
-                                                           IsVisible="{Binding !Update.IsApplyingUpdate}"
-                                                           HorizontalAlignment="Center" />
-                                                <TextBlock Text="Installing..."
-                                                           IsVisible="{Binding Update.IsApplyingUpdate}"
-                                                           HorizontalAlignment="Center" />
-                                            </Panel>
-                                        </Button>
-                                    </StackPanel>
-                                </Border>
-                                <Button Command="{Binding Update.CheckForUpdatesCommand}"
-                                        Classes="nav-item"
-                                        HorizontalAlignment="Stretch"
-                                        HorizontalContentAlignment="Left">
-                                    <StackPanel Orientation="Horizontal" Spacing="10">
-                                        <TextBlock Text="&#x27F3;"
-                                                   FontSize="15"
-                                                   Foreground="{StaticResource SidebarTextBrush}" />
-                                        <Panel>
-                                            <TextBlock Text="Check for updates"
-                                                       IsVisible="{Binding !Update.IsCheckingForUpdates}"
-                                                       Foreground="{StaticResource SidebarTextBrush}"
-                                                       FontSize="13" />
-                                            <TextBlock Text="Checking..."
-                                                       IsVisible="{Binding Update.IsCheckingForUpdates}"
-                                                       Foreground="{StaticResource SidebarTextBrush}"
-                                                       FontSize="13" />
-                                        </Panel>
-                                    </StackPanel>
-                                </Button>
-
-                            </StackPanel>
+                        <!-- Update available button — only visible when update is found -->
+                        <Border DockPanel.Dock="Bottom"
+                                Padding="8,0,8,8"
+                                IsVisible="{Binding Update.IsUpdateAvailable}">
+                            <Button Classes="update-sidebar-btn"
+                                    Command="{Binding Update.ShowPromptCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Center"
+                                    Padding="10,9"
+                                    CornerRadius="8"
+                                    Cursor="Hand">
+                                <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                                    <Ellipse Width="7" Height="7"
+                                             Fill="White"
+                                             VerticalAlignment="Center"
+                                             Opacity="0.9" />
+                                    <TextBlock Text="Update available"
+                                               Foreground="White"
+                                               FontSize="12.5"
+                                               FontWeight="SemiBold" />
+                                </StackPanel>
+                            </Button>
                         </Border>
 
                         <Border DockPanel.Dock="Bottom" Padding="8,0,8,16">
@@ -222,6 +187,77 @@
                 </StackPanel>
             </Border>
         </Panel>
+        <Panel IsVisible="{Binding Update.ShowUpdatePrompt}"
+               Classes="overlay-panel"
+               Background="#B80F172A">
+            <Border Classes="overlay-card"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    MaxWidth="380">
+                <StackPanel Spacing="16" HorizontalAlignment="Center">
+                    <Border Background="#EFF6FF"
+                            CornerRadius="24"
+                            Width="52" Height="52"
+                            HorizontalAlignment="Center">
+                        <TextBlock Text="&#x2191;"
+                                   FontSize="22" FontWeight="Bold"
+                                   Foreground="{StaticResource AccentBrush}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="Update available"
+                               FontSize="18" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center" />
+                    <StackPanel Spacing="4" HorizontalAlignment="Center">
+                        <TextBlock FontSize="13"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap">
+                            A new version is ready to install. The application
+                            will restart automatically after updating.
+                        </TextBlock>
+                        <TextBlock Text="{Binding Update.AvailableVersion, StringFormat='Version {0}'}"
+                                   FontSize="12" FontWeight="Medium"
+                                   Foreground="{StaticResource TextMutedBrush}"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                    <StackPanel Spacing="8" Margin="0,4,0,0">
+                        <Button Command="{Binding Update.ApplyUpdateCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,11"
+                                CornerRadius="8"
+                                FontWeight="Medium"
+                                FontSize="13"
+                                Cursor="Hand"
+                                Classes="update-primary">
+                            <Panel>
+                                <TextBlock Text="Update now"
+                                           IsVisible="{Binding !Update.IsApplyingUpdate}"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="Installing..."
+                                           IsVisible="{Binding Update.IsApplyingUpdate}"
+                                           HorizontalAlignment="Center" />
+                            </Panel>
+                        </Button>
+                        <Button Command="{Binding Update.DismissUpdateCommand}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,11"
+                                CornerRadius="8"
+                                FontWeight="Medium"
+                                FontSize="13"
+                                Cursor="Hand"
+                                Classes="update-secondary">
+                            <TextBlock Text="Not now" HorizontalAlignment="Center" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Panel>
     </Panel>
     <Window.Styles>
         <Style Selector="Border.content-dimmed">
@@ -255,6 +291,50 @@
         </Style>
         <Style Selector="Button.nav-item:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource SidebarActiveBrush}" />
+        </Style>
+        <Style Selector="Button.update-primary /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.update-primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.update-secondary">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="Button.update-secondary /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.update-secondary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource BorderBrush}" />
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.update-sidebar-btn">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="Button.update-sidebar-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="#16A34A" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.update-sidebar-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#15803D" />
         </Style>
     </Window.Styles>
 </Window>

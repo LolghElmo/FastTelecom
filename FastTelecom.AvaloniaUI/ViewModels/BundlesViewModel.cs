@@ -38,8 +38,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         protected override async Task<bool> FetchAsync(CancellationToken ct)
         {
             ShowEmptyState = false;
-            ErrorMessage   = null;
-            StatusMessage  = null;
+            ErrorMessage = null;
+            StatusMessage = null;
             Bundles.Clear();
 
             var result = await _bundleService.GetBundlesAsync(ct);
@@ -63,8 +63,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         [RelayCommand(CanExecute = nameof(CanPurchase))]
         private async Task PurchaseAsync(BundleDto bundle, CancellationToken ct)
         {
-            IsPurchasing  = true;
-            ErrorMessage  = null;
+            IsPurchasing = true;
+            ErrorMessage = null;
             StatusMessage = null;
 
             try

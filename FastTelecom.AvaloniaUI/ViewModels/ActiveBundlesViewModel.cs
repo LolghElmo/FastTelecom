@@ -32,8 +32,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
         protected override async Task<bool> FetchAsync(CancellationToken ct)
         {
-            ShowEmptyState  = false;
-            PinnedBundle    = null;
+            ShowEmptyState = false;
+            PinnedBundle = null;
             HasPinnedBundle = false;
             Bundles.Clear();
 
@@ -45,7 +45,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             foreach (var bundle in result.Bundles)
                 Bundles.Add(bundle);
 
-            PinnedBundle    = result.Bundles.FirstOrDefault(b => b.IsOnline);
+            PinnedBundle = result.Bundles.FirstOrDefault(b => b.IsOnline);
             HasPinnedBundle = PinnedBundle is not null;
             ShowEmptyState  = Bundles.Count == 0;
             return true;

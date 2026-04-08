@@ -8,6 +8,7 @@
     <ApplicationIcon Condition="Exists('Assets\icon.ico')">Assets\icon.ico</ApplicationIcon>
 	<MinVerTagPrefix>v</MinVerTagPrefix>
     <AssemblyName>FastTelecom</AssemblyName>
+    <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,8 +11,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
     {
         private const string UpdateSource = @"C:/Temp/DemoServer/";
 
-        private UpdateManager _updateManager = new(new SimpleFileSource(new System.IO.DirectoryInfo(UpdateSource)));
-        private UpdateInfo?   _pendingUpdate;
+        private readonly UpdateManager _updateManager = new(new SimpleFileSource(new System.IO.DirectoryInfo(UpdateSource)));
+        private UpdateInfo? _pendingUpdate;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(CheckForUpdatesCommand))]
@@ -22,7 +22,10 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         [NotifyCanExecuteChangedFor(nameof(ApplyUpdateCommand))]
         private bool _isApplyingUpdate;
 
-        [ObservableProperty] private bool   _isUpdateAvailable;
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ApplyUpdateCommand))]
+        private bool   _isUpdateAvailable;
+        [ObservableProperty] private bool   _showUpdatePrompt;
         [ObservableProperty] private string _availableVersion = string.Empty;
 
         [RelayCommand(CanExecute = nameof(CanCheck))]
@@ -37,6 +40,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                 {
                     IsUpdateAvailable = true;
                     AvailableVersion  = _pendingUpdate.TargetFullRelease.Version.ToString();
+                    ShowUpdatePrompt  = true;
                 }
                 else
                 {
@@ -67,9 +71,20 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             }
             catch (Exception)
             {
-                // if something goes wrong just re-enable the button
                 IsApplyingUpdate = false;
             }
+        }
+
+        [RelayCommand]
+        private void DismissUpdate()
+        {
+            ShowUpdatePrompt = false;
+        }
+
+        [RelayCommand]
+        private void ShowPrompt()
+        {
+            ShowUpdatePrompt = true;
         }
 
         private bool CanCheck() => !IsCheckingForUpdates;

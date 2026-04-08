@@ -12,7 +12,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private readonly INavigationService _nav;
         private readonly CredentialStore    _credentials;
 
-        public UpdateViewModel Update { get; } = new();
+        public UpdateViewModel Update { get; }
+
 
         public string AppVersion { get; } =
             typeof(MainWindowViewModel).Assembly
@@ -34,16 +35,23 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
         [ObservableProperty] private string _pageLoadingMessage = string.Empty;
 
-        public bool IsOverlayVisible => IsPageLoading || IsPageFailed;
+        public bool IsOverlayVisible => IsPageLoading || IsPageFailed || Update.ShowUpdatePrompt;
 
         private PageLoadViewModelBase? _trackedPage;
 
 
         public MainWindowViewModel(INavigationService nav, CredentialStore credentials)
         {
-            _nav         = nav;
+            _nav = nav;
             _credentials = credentials;
             _nav.StateChanged += OnNavigationChanged;
+
+            Update = new UpdateViewModel();
+            Update.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(UpdateViewModel.ShowUpdatePrompt))
+                    OnPropertyChanged(nameof(IsOverlayVisible));
+            };
         }
 
 
@@ -62,7 +70,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                 _trackedPage.PropertyChanged -= OnTrackedPagePropertyChanged;
 
             CurrentView = _nav.CurrentView;
-            ShowShell   = _nav.ShowShell;
+            ShowShell = _nav.ShowShell;
 
             _trackedPage = CurrentView as PageLoadViewModelBase;
 
@@ -86,6 +94,9 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                 LoginViewModel         => "Sign In",
                 _                      => string.Empty,
             };
+
+            if (CurrentView is DashboardViewModel && !Update.IsUpdateAvailable)
+                _ = Update.CheckForUpdatesCommand.ExecuteAsync(null);
         }
 
         private void OnTrackedPagePropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -102,8 +113,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private void SyncOverlayState()
         {
             if (_trackedPage is null) return;
-            IsPageLoading      = _trackedPage.IsLoading;
-            IsPageFailed       = _trackedPage.HasFailed;
+            IsPageLoading = _trackedPage.IsLoading;
+            IsPageFailed = _trackedPage.HasFailed;
             PageLoadingMessage = _trackedPage.LoadingMessage;
         }
 
