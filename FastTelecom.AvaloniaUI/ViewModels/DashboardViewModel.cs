@@ -44,7 +44,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         public void Load(SubscriberDto subscriber)
         {
             SubscriberId = subscriber.SubscriberID ?? "—";
-            UserProfile = subscriber.UserProfileID ?? "—";
+            UserProfile = subscriber.UserProfileID.ToString() ?? "—";
             IpAddress = subscriber.IPAddress ?? "—";
             ContactPhone = subscriber.ContactTeleNo ?? "—";
             ChargingType = subscriber.ChargingType ?? "—";

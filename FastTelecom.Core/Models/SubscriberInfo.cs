@@ -23,7 +23,7 @@ namespace FastTelecom.Domain.Models
         public int Status { get; set; }
         public int HasFramedRouteList { get; set; }
         public string? FirstUseTime { get; set; }
-        public string? UserProfileID { get; set; }
+        public int? UserProfileID { get; set; }
         public string? LastUseEndTime { get; set; }
         public string? ContactTeleNo { get; set; }
         public string? IPAddress { get; set; }

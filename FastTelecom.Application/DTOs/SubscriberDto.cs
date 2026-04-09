@@ -12,7 +12,7 @@ namespace FastTelecom.Application.DTOs
         public string? ExpireTime { get; init; }
         public string? FirstUseTime { get; init; }
         public string? LastUseEndTime { get; init; }
-        public string? UserProfileID { get; init; }
+        public int? UserProfileID { get; init; }
         public string? IPAddress { get; init; }
         public string? ContactTeleNo { get; init; }
         public int Status { get; init; }
