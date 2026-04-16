@@ -3,9 +3,10 @@ using CommunityToolkit.Mvvm.Input;
 using FastTelecom.Application.DTOs;
 using FastTelecom.Application.Services;
 using FastTelecom.AvaloniaUI.Services;
-using System;
+using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace FastTelecom.AvaloniaUI.ViewModels
 {
@@ -15,8 +16,10 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private readonly INavigationService _nav;
         private readonly CredentialStore _credentials;
 
-        private const int MaxAttempts  = 5;
+        private const int MaxAttempts = 5;
         private const int RetryDelayMs = 1500;
+
+        private CancellationTokenSource? _loginCts;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
@@ -26,24 +29,29 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         [NotifyCanExecuteChangedFor(nameof(LoginCommand))]
         private string _password = string.Empty;
 
-        [ObservableProperty] private bool    _rememberMe;
+        [ObservableProperty] private bool _rememberMe;
         [ObservableProperty] private string? _errorMessage;
-        [ObservableProperty] private string  _attemptMessage = string.Empty;
-        [ObservableProperty] private bool    _isLoading;
+        [ObservableProperty] private string _attemptMessage = string.Empty;
+        [ObservableProperty] private bool _isLoading;
 
         public bool ShowAttemptMessage => !string.IsNullOrEmpty(AttemptMessage);
 
         partial void OnAttemptMessageChanged(string value) =>
             OnPropertyChanged(nameof(ShowAttemptMessage));
 
-        public LoginViewModel(
-            AuthenticationService authService,
-            INavigationService nav,
-            CredentialStore credentials)
+        public ObservableCollection<SavedAccountViewModel> SavedAccounts { get; } = [];
+        public bool HasSavedAccounts => SavedAccounts.Count > 0;
+
+        public LoginViewModel(AuthenticationService authService, INavigationService nav, CredentialStore credentials)
         {
             _authService = authService;
             _nav = nav;
             _credentials = credentials;
+
+            foreach (var a in _credentials.LoadAll())
+                SavedAccounts.Add(new SavedAccountViewModel(a.Username, a.Password));
+
+            SavedAccounts.CollectionChanged += (_, _) => OnPropertyChanged(nameof(HasSavedAccounts));
         }
 
         public async Task TryAutoLoginAsync(string username, string password)
@@ -51,7 +59,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             Username = username;
             Password = password;
             RememberMe = true;
-            await RunLoginLoopAsync(CancellationToken.None);
+            await RunLoginLoopAsync();
         }
 
         private bool CanLogin() =>
@@ -60,12 +68,40 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             !IsLoading;
 
         [RelayCommand(CanExecute = nameof(CanLogin))]
-        private async Task LoginAsync(CancellationToken ct) =>
-            await RunLoginLoopAsync(ct);
+        private async Task LoginAsync() => await RunLoginLoopAsync();
 
+        [RelayCommand]
+        private void CancelLogin() => _loginCts?.Cancel();
 
-        private async Task RunLoginLoopAsync(CancellationToken ct)
+        [RelayCommand]
+        private async Task SelectAccountAsync(SavedAccountViewModel account)
         {
+            if (IsLoading) return;
+
+            foreach (var a in SavedAccounts) a.IsSelected = false;
+            account.IsSelected = true;
+
+            Username = account.Username;
+            Password = account.Password;
+            RememberMe = true;
+
+            await RunLoginLoopAsync();
+        }
+
+        [RelayCommand]
+        private void RemoveAccount(SavedAccountViewModel account)
+        {
+            _credentials.Remove(account.Username);
+            SavedAccounts.Remove(account);
+        }
+
+        private async Task RunLoginLoopAsync()
+        {
+            _loginCts?.Cancel();
+            _loginCts?.Dispose();
+            _loginCts = new CancellationTokenSource();
+            var ct = _loginCts.Token;
+
             ErrorMessage = null;
             AttemptMessage = string.Empty;
             IsLoading = true;
@@ -78,8 +114,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                     ct.ThrowIfCancellationRequested();
 
                     AttemptMessage = attempt == 1
-                        ? $"1 / {MaxAttempts} — Connecting…"
-                        : $"{attempt} / {MaxAttempts} — Retrying…";
+                        ? "Connecting to server…"
+                        : $"API not responding — Retrying ({attempt} of {MaxAttempts})…";
 
                     if (attempt > 1)
                         await Task.Delay(RetryDelayMs, ct);
@@ -90,12 +126,11 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                         result = await _authService.LoginAsync(
                             new LoginRequestDto { Username = Username, Password = Password }, ct);
                     }
-                    catch (OperationCanceledException) { throw; }
+                    catch (System.OperationCanceledException) { throw; }
                     catch
                     {
                         if (attempt == MaxAttempts)
-                            ErrorMessage = "Couldn't reach the server after several attempts. " +
-                                           "Please check your connection and try again.";
+                            ErrorMessage = "Couldn't reach the server after several attempts. Please check your connection and try again.";
                         continue;
                     }
 
@@ -103,7 +138,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                     {
                         if (result.IsCredentialError)
                         {
-                            ErrorMessage   = "Incorrect username or password. Please try again.";
+                            foreach (var a in SavedAccounts) a.IsSelected = false;
+                            ErrorMessage = "Incorrect username or password. Please try again.";
                             AttemptMessage = string.Empty;
                             return;
                         }
@@ -124,12 +160,17 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                     return;
                 }
             }
-            catch (OperationCanceledException) { }
+            catch (System.OperationCanceledException)
+            {
+                foreach (var a in SavedAccounts) a.IsSelected = false;
+            }
             finally
             {
                 IsLoading = false;
                 AttemptMessage = string.Empty;
                 LoginCommand.NotifyCanExecuteChanged();
+                _loginCts?.Dispose();
+                _loginCts = null;
             }
         }
     }

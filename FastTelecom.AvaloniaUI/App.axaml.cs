@@ -33,6 +33,9 @@ namespace FastTelecom.AvaloniaUI
             // Credential storage (machine+user encrypted, persists across restarts)
             services.AddSingleton<CredentialStore>();
 
+            // User preferences (sort mode etc., persisted to AppData JSON)
+            services.AddSingleton<UserPreferencesService>();
+
             // ViewModels
             services.AddTransient<LoginViewModel>();
             services.AddSingleton<DashboardViewModel>();

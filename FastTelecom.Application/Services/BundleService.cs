@@ -10,15 +10,15 @@ namespace FastTelecom.Application.Services
 {
     public sealed class BundleService
     {
-        private readonly IBundleClient  _client;
-        private readonly ITarasClient   _tarasClient;
-        private readonly SessionStore   _session;
+        private readonly IBundleClient _client;
+        private readonly ITarasClient _tarasClient;
+        private readonly SessionStore _session;
 
         public BundleService(IBundleClient client, ITarasClient tarasClient, SessionStore session)
         {
-            _client      = client;
+            _client = client;
             _tarasClient = tarasClient;
-            _session     = session;
+            _session = session;
         }
         public async Task<BundlesResultDto> GetBundlesAsync(CancellationToken ct = default)
         {
@@ -114,44 +114,59 @@ namespace FastTelecom.Application.Services
             catch (OperationCanceledException) { throw; }
             catch (Exception ex) { return ActiveBundlesResultDto.Fail(ex.Message); }
         }
-
-
-        // TODO: might need to replace this whole mess 
         private static ActiveBundleDto MapBundle(Domain.Models.ActiveBundle b)
         {
             bool isUnlimited = b.MaxServiceUsage <= 0;
 
-            long totalKb  = isUnlimited ? 0L : b.MaxServiceUsage * 1024L;
-            long usedKb   = isUnlimited ? 0L : Math.Max(totalKb - b.FreeVolume, 0L);
+            long totalKb = isUnlimited ? 0L : b.MaxServiceUsage * 1024L;
+            long usedKb = isUnlimited ? 0L : Math.Max(totalKb - b.FreeVolume, 0L);
             double usedMb = usedKb / 1024.0;
             double totalMb = b.MaxServiceUsage;
-            double pct    = isUnlimited || totalKb == 0 ? 0
-                          : Math.Min(usedKb / (double)totalKb * 100.0, 100.0);
+            double pct = isUnlimited || totalKb == 0 ? 0
+                       : Math.Min(usedKb / (double)totalKb * 100.0, 100.0);
             double monthlyUsedMb = (b.AccumulateInfo?.MonthAccuVolume ?? 0) / 1024.0;
 
-            var expiryDate    = ParseDate(b.ExpTime);
+            var expiryDate = ParseDate(b.ExpTime);
             bool expiringSoon = expiryDate.HasValue &&
                                 (expiryDate.Value - DateTime.Now).TotalDays <= 7;
 
+            var name = b.ProductName?.Trim() ?? string.Empty;
+
             return new ActiveBundleDto
             {
-                ProductId          = b.ProductID ?? string.Empty,
-                Name               = b.ProductName?.Trim() ?? string.Empty,
-                IsUnlimited        = isUnlimited,
-                IsVolumeBundle     = !isUnlimited,
-                PercentUsed        = pct,
-                PercentLabel       = $"{pct:F0}%",
+                ProductId = b.ProductID ?? string.Empty,
+                Name = name,
+                IsUnlimited = isUnlimited,
+                IsVolumeBundle = !isUnlimited,
+                PercentUsed = pct,
+                PercentLabel = $"{pct:F0}%",
                 UsedOfTotalDisplay = isUnlimited
-                                       ? string.Empty
-                                       : $"Used {FormatMb(usedMb)} of {FormatMb(totalMb)}",
+                    ? string.Empty
+                    : $"Used {FormatMb(usedMb)} of {FormatMb(totalMb)}",
                 MonthlyUsedDisplay = $"This month: {FormatMb(monthlyUsedMb)} used",
-                TotalDisplay       = isUnlimited ? "Unlimited" : FormatMb(totalMb),
-                EffectiveDate      = FormatDateStr(b.EffTime),
-                ExpiryDate         = FormatDateStr(b.ExpTime),
-                Speed              = b.Speed ?? string.Empty,
-                IsOnline           = b.OnlineSessionNum > 0,
-                IsExpiringSoon     = expiringSoon,
+                TotalDisplay = isUnlimited ? "Unlimited" : FormatMb(totalMb),
+                EffectiveDate = FormatDateStr(b.EffTime),
+                ExpiryDate = FormatDateStr(b.ExpTime),
+                Speed = b.Speed ?? string.Empty,
+                IsOnline = b.OnlineSessionNum > 0,
+                IsExpiringSoon = expiringSoon,
+                ExpiryDateValue = expiryDate,
+                EffectiveDateValue = ParseDate(b.EffTime),
+                VolumeMb = b.MaxServiceUsage,
+                BundleType = InferBundleType(name),
             };
+        }
+
+        private static string InferBundleType(string name)
+        {
+            if (name.Contains("الافتراضية")) return "Basic";
+            if (name.Contains("سرعة")  || name.Contains("بوست")  ||
+                name.Contains("Speed") || name.Contains("Boost")) return "Speed Boost";
+            if (name.Contains("ليل")   || name.Contains("نايت")  ||
+                name.Contains("Night") || name.Contains("Nightly")) return "Nightly";
+            if (name.Contains("لا محدود") || name.Contains("مفتوح") ||
+                name.Contains("Unlimited")) return "Unlimited";
+            return "Standard";
         }
 
         private static string FormatMb(double mb) =>

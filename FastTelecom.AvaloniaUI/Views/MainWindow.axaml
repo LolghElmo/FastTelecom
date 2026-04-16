@@ -39,42 +39,62 @@
                                            Foreground="{StaticResource SidebarTextBrush}" />
                             </StackPanel>
                         </Border>
-                        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="8,8,8,0">
-                            <Button Command="{Binding NavigateToDashboardCommand}"
-                                    Classes="nav-item"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Left">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="&#x2302;" FontSize="16"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                    <TextBlock Text="Dashboard"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding NavigateToBundlesCommand}"
-                                    Classes="nav-item"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Left">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="&#x229E;" FontSize="16"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                    <TextBlock Text="Bundles"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                </StackPanel>
-                            </Button>
-                            <Button Command="{Binding NavigateToActiveBundlesCommand}"
-                                    Classes="nav-item"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Left">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="&#x25A6;" FontSize="16"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                    <TextBlock Text="My Bundles"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                </StackPanel>
-                            </Button>
+                        <StackPanel DockPanel.Dock="Top" Spacing="2" Margin="0,8,0,0">
+                            <Grid ColumnDefinitions="3,*">
+                                <Border Grid.Column="0"
+                                        Background="{StaticResource AccentBrush}"
+                                        CornerRadius="0,2,2,0"
+                                        IsVisible="{Binding IsDashboardPage}" />
+                                <Button Grid.Column="1"
+                                        Command="{Binding NavigateToDashboardCommand}"
+                                        Classes="nav-item"
+                                        Classes.nav-active="{Binding IsDashboardPage}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Margin="5,0,8,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="&#x2302;" FontSize="16" />
+                                        <TextBlock Text="Dashboard" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <Grid ColumnDefinitions="3,*">
+                                <Border Grid.Column="0"
+                                        Background="{StaticResource AccentBrush}"
+                                        CornerRadius="0,2,2,0"
+                                        IsVisible="{Binding IsBundlesPage}" />
+                                <Button Grid.Column="1"
+                                        Command="{Binding NavigateToBundlesCommand}"
+                                        Classes="nav-item"
+                                        Classes.nav-active="{Binding IsBundlesPage}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Margin="5,0,8,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="&#x229E;" FontSize="16" />
+                                        <TextBlock Text="Bundles" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <Grid ColumnDefinitions="3,*">
+                                <Border Grid.Column="0"
+                                        Background="{StaticResource AccentBrush}"
+                                        CornerRadius="0,2,2,0"
+                                        IsVisible="{Binding IsActiveBundlesPage}" />
+                                <Button Grid.Column="1"
+                                        Command="{Binding NavigateToActiveBundlesCommand}"
+                                        Classes="nav-item"
+                                        Classes.nav-active="{Binding IsActiveBundlesPage}"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Margin="5,0,8,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="&#x25A6;" FontSize="16" />
+                                        <TextBlock Text="My Bundles" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
                         </StackPanel>
-                        <!-- Update available button — only visible when update is found -->
                         <Border DockPanel.Dock="Bottom"
                                 Padding="8,0,8,8"
                                 IsVisible="{Binding Update.IsUpdateAvailable}">
@@ -97,19 +117,20 @@
                                 </StackPanel>
                             </Button>
                         </Border>
-
-                        <Border DockPanel.Dock="Bottom" Padding="8,0,8,16">
-                            <Button Command="{Binding LogoutCommand}"
-                                    Classes="nav-item"
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Left">
-                                <StackPanel Orientation="Horizontal" Spacing="10">
-                                    <TextBlock Text="&#x2190;" FontSize="16"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                    <TextBlock Text="Logout"
-                                               Foreground="{StaticResource SidebarTextBrush}" />
-                                </StackPanel>
-                            </Button>
+                        <Border DockPanel.Dock="Bottom" Padding="0,0,8,20">
+                            <Grid ColumnDefinitions="3,*">
+                                <Button Grid.Column="1"
+                                        Command="{Binding LogoutCommand}"
+                                        Classes="nav-item nav-logout"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        Margin="5,0,0,0">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="&#x2190;" FontSize="16" />
+                                        <TextBlock Text="Logout" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
                         </Border>
                         <Border />
                     </DockPanel>
@@ -121,9 +142,16 @@
                                 IsVisible="{Binding ShowShell}"
                                 BorderBrush="{StaticResource BorderBrush}"
                                 BorderThickness="0,0,0,1">
-                            <TextBlock Text="{Binding CurrentPageTitle}"
-                                       FontSize="20" FontWeight="SemiBold"
-                                       Foreground="{StaticResource TextPrimaryBrush}" />
+                            <StackPanel Spacing="2">
+                                <TextBlock Text="{Binding CurrentPageTitle}"
+                                           FontSize="20" FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                <TextBlock Text="{Binding CurrentPageSubtitle}"
+                                           FontSize="13"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           IsVisible="{Binding CurrentPageSubtitle,
+                                               Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                            </StackPanel>
                         </Border>
                         <TransitioningContentControl Content="{Binding CurrentView}"
                                                      VerticalContentAlignment="Stretch"
@@ -279,8 +307,11 @@
             <Setter Property="Background"      Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="CornerRadius"    Value="8" />
-            <Setter Property="Padding"         Value="12,10" />
+            <Setter Property="Padding"         Value="10,11" />
             <Setter Property="Cursor"          Value="Hand" />
+        </Style>
+        <Style Selector="Button.nav-item TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource SidebarTextBrush}" />
         </Style>
         <Style Selector="Button.nav-item /template/ ContentPresenter">
             <Setter Property="Transitions">
@@ -291,6 +322,18 @@
         </Style>
         <Style Selector="Button.nav-item:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource SidebarActiveBrush}" />
+        </Style>
+        <Style Selector="Button.nav-item.nav-active /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource SidebarActiveBrush}" />
+        </Style>
+        <Style Selector="Button.nav-item.nav-active TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.nav-logout:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#2D0808" />
+        </Style>
+        <Style Selector="Button.nav-logout:pointerover TextBlock">
+            <Setter Property="Foreground" Value="#FCA5A5" />
         </Style>
         <Style Selector="Button.update-primary /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentBrush}" />

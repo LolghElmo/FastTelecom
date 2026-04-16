@@ -27,54 +27,56 @@
                            Foreground="White" FontWeight="Medium" FontSize="13" />
             </Border>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" Padding="32,24,32,24">
-            <ItemsControl x:Name="BundlesList" ItemsSource="{Binding Bundles}">
+        <ScrollViewer Grid.Row="1" Padding="24,20,24,0"
+                      HorizontalScrollBarVisibility="Disabled">
+            <ItemsControl x:Name="BundlesList" ItemsSource="{Binding Bundles}"
+                          Margin="0,0,0,40">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <!-- To be reviewed later -->
-                        <UniformGrid /> 
+                        <UniformGrid Columns="3" Margin="0,0,-16,0" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
-
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:CompileBindings="False">
-                        <Border Classes="bundle-card" Width="200" Margin="0,0,16,16">
-                            <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                <TextBlock Grid.Row="0"
-                                           Text="{Binding VolGb, StringFormat='{}{0} GB'}"
-                                           FontSize="28" FontWeight="Bold"
+                        <Border Classes="bundle-card" Margin="0,0,16,16">
+                            <StackPanel Spacing="13">
+                                <TextBlock Text="{Binding VolGb, StringFormat='{}{0} GB'}"
+                                           FontSize="30" FontWeight="ExtraBold"
                                            Foreground="{StaticResource AccentBrush}"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,4" />
-
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding Name}"
-                                           FontSize="13"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="{Binding Name}"
+                                           FontSize="12"
                                            Foreground="{StaticResource TextSecondaryBrush}"
                                            TextWrapping="Wrap"
                                            TextAlignment="Center"
-                                           HorizontalAlignment="Center"
-                                           Margin="0,0,0,12" />
-
-                                <Border Grid.Row="2"
-                                        Background="{StaticResource SurfaceBrush}"
-                                        CornerRadius="6"
-                                        Padding="8,6"
-                                        HorizontalAlignment="Stretch"
-                                        Margin="0,0,0,12">
-                                    <TextBlock Text="{Binding Price, StringFormat='SP {0:N0}'}"
-                                               FontSize="15" FontWeight="SemiBold"
-                                               Foreground="{StaticResource TextPrimaryBrush}"
-                                               HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center" />
+                                <Border Background="{StaticResource SurfaceBrush}"
+                                        CornerRadius="8"
+                                        Padding="10,7">
+                                    <StackPanel Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                Spacing="6">
+                                        <TextBlock Text="{Binding Price, StringFormat='{}{0:N0}'}"
+                                                   FontSize="17" FontWeight="Bold"
+                                                   Foreground="{StaticResource TextPrimaryBrush}"
+                                                   VerticalAlignment="Center" />
+                                        <Border Background="#EFF6FF"
+                                                CornerRadius="4"
+                                                Padding="5,2"
+                                                VerticalAlignment="Center">
+                                            <TextBlock Text="SP"
+                                                       FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource AccentBrush}" />
+                                        </Border>
+                                    </StackPanel>
                                 </Border>
-                                <Button Grid.Row="3"
-                                        Classes="buy-btn"
+                                <Button Classes="buy-btn"
                                         Content="Buy"
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Center"
                                         Command="{Binding #BundlesList.DataContext.PurchaseCommand}"
                                         CommandParameter="{Binding}" />
-                            </Grid>
+                            </StackPanel>
                         </Border>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -93,29 +95,37 @@
             <Setter Property="Background"      Value="{StaticResource CardBrush}" />
             <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius"    Value="12" />
-            <Setter Property="Padding"         Value="20,18" />
+            <Setter Property="CornerRadius"    Value="16" />
+            <Setter Property="Padding"         Value="18,16" />
+            <Setter Property="BoxShadow"       Value="0 2 8 0 #10000000" />
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Setter Property="Transitions">
                 <Transitions>
                     <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
                     <BoxShadowsTransition          Property="BoxShadow"       Duration="0:0:0.15" />
+                    <BrushTransition               Property="BorderBrush"     Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
         <Style Selector="Border.bundle-card:pointerover">
             <Setter Property="RenderTransform" Value="scale(1.025)" />
-            <Setter Property="BoxShadow"       Value="0 4 20 0 #1A000000" />
+            <Setter Property="BoxShadow" Value="0 8 28 0 #252563EB, 0 2 8 0 #10000000" />
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
         </Style>
         <Style Selector="Button.buy-btn">
             <Setter Property="CornerRadius" Value="8" />
-            <Setter Property="Padding"      Value="0,10" />
-            <Setter Property="FontWeight"   Value="Medium" />
-            <Setter Property="Cursor"       Value="Hand" />
+            <Setter Property="Padding" Value="0,9" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
         </Style>
         <Style Selector="Button.buy-btn /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentBrush}" />
             <Setter Property="Foreground" Value="White" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
         </Style>
         <Style Selector="Button.buy-btn:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />

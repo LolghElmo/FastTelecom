@@ -4,195 +4,402 @@
              xmlns:conv="using:FastTelecom.AvaloniaUI.Converters"
              x:Class="FastTelecom.AvaloniaUI.Views.ActiveBundlesView"
              x:DataType="vm:ActiveBundlesViewModel">
-    <Grid>
-        <ScrollViewer>
-            <StackPanel Margin="32,24,32,24" Spacing="0" >
-                <Border IsVisible="{Binding HasPinnedBundle}"
-                        x:CompileBindings="False"
-                        CornerRadius="14"
-                        Margin="0,0,0,8"
-                        Padding="24,20"
-                        ClipToBounds="True">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                            <GradientStop Color="#1E40AF" Offset="0" />
-                            <GradientStop Color="#2563EB" Offset="1" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <StackPanel Spacing="14">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
-                            <Border CornerRadius="20" Padding="10,4" Background="#33FFFFFF">
-                                <TextBlock Text="● LIVE NOW"
-                                           FontSize="11" FontWeight="Bold" Foreground="White" />
-                            </Border>
-                            <TextBlock Text="Currently Active"
-                                       FontSize="11" Foreground="White" Opacity="0.7"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right"
-                                       Text="{Binding PinnedBundle.TotalDisplay}"
-                                       FontSize="26" FontWeight="Bold"
-                                       Foreground="White" VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding PinnedBundle.Name}"
-                                       FontSize="17" FontWeight="SemiBold"
-                                       Foreground="White" VerticalAlignment="Center"
-                                       TextWrapping="Wrap" />
-                        </DockPanel>
-                        <StackPanel IsVisible="{Binding PinnedBundle.IsVolumeBundle}" Spacing="8">
-                            <DockPanel>
-                                <TextBlock DockPanel.Dock="Right"
-                                           Text="{Binding PinnedBundle.PercentLabel}"
-                                           FontSize="14" FontWeight="Bold"
-                                           Foreground="White" VerticalAlignment="Center" />
-                                <TextBlock Text="{Binding PinnedBundle.UsedOfTotalDisplay}"
-                                           FontSize="13" Foreground="White" Opacity="0.85"
-                                           VerticalAlignment="Center" />
-                            </DockPanel>
-                            <ProgressBar Value="{Binding PinnedBundle.PercentUsed}"
-                                         Maximum="100" MinHeight="10" CornerRadius="5"
-                                         Background="#33FFFFFF" Foreground="White">
-                                <ProgressBar.Transitions>
-                                    <Transitions>
-                                        <DoubleTransition Property="Value" Duration="0:0:1" Easing="CubicEaseOut" />
-                                    </Transitions>
-                                </ProgressBar.Transitions>
-                            </ProgressBar>
-                        </StackPanel>
-                        <StackPanel IsVisible="{Binding PinnedBundle.IsUnlimited}" Spacing="4">
-                            <TextBlock Text="Unlimited Data"
-                                       FontSize="15" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="{Binding PinnedBundle.MonthlyUsedDisplay}"
-                                       FontSize="13" Foreground="White" Opacity="0.8" />
-                        </StackPanel>
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right"
-                                       Text="{Binding PinnedBundle.ExpiryDate, StringFormat='Expires {0}'}"
-                                       FontSize="12" Foreground="White" Opacity="0.65"
-                                       VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding PinnedBundle.Speed, StringFormat='⚡ {0}'}"
-                                       FontSize="12" Foreground="White" Opacity="0.65"
-                                       VerticalAlignment="Center" />
-                        </DockPanel>
-                    </StackPanel>
-                </Border>
-                <TextBlock Text="ALL ACTIVE BUNDLES"
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+                Padding="32,14,32,10"
+                IsVisible="{Binding !ShowEmptyState}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left"
+                           Text="ALL ACTIVE BUNDLES"
                            FontSize="11" FontWeight="Bold" LetterSpacing="1.5"
                            Foreground="{StaticResource TextMutedBrush}"
-                           Margin="2,16,0,12" />
-                <ItemsControl ItemsSource="{Binding Bundles}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate x:CompileBindings="False">
-                            <Border Classes="active-card" Margin="0,0,0,12">
-                                <StackPanel Spacing="12">
-                                    <DockPanel>
-                                        <Border IsVisible="{Binding IsOnline}"
-                                                DockPanel.Dock="Right"
-                                                Classes="online-badge"
-                                                VerticalAlignment="Top">
-                                            <TextBlock Text="● LIVE" FontSize="11"
-                                                       FontWeight="Bold" Foreground="White" />
-                                        </Border>
-                                        <Border IsVisible="{Binding IsExpiringSoon}"
-                                                DockPanel.Dock="Right"
-                                                Classes="expiring-badge"
-                                                VerticalAlignment="Top" Margin="0,0,8,0">
-                                            <TextBlock Text="⚠ EXPIRING SOON" FontSize="11"
-                                                       FontWeight="Bold" Foreground="White" />
-                                        </Border>
-                                        <StackPanel Spacing="2">
-                                            <TextBlock Text="{Binding Name}"
-                                                       FontSize="15" FontWeight="SemiBold"
-                                                       Foreground="{StaticResource TextPrimaryBrush}" />
-                                            <TextBlock Text="{Binding TotalDisplay}"
-                                                       FontSize="12" FontWeight="Medium"
-                                                       Foreground="{StaticResource AccentBrush}" />
-                                        </StackPanel>
-                                    </DockPanel>
-                                    <Border Height="1" Background="{StaticResource BorderBrush}" />
-                                    <StackPanel IsVisible="{Binding IsVolumeBundle}" Spacing="6">
+                           VerticalAlignment="Center" />
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal" Spacing="4"
+                            VerticalAlignment="Center">
+                    <Button Classes="sort-btn"
+                            Classes.sort-active="{Binding IsDateAscending}"
+                            Command="{Binding SetSortDateAscendingCommand}"
+                            ToolTip.Tip="Oldest purchase first">
+                        <TextBlock Text="↑ Date" />
+                    </Button>
+                    <Button Classes="sort-btn"
+                            Classes.sort-active="{Binding IsDateDescending}"
+                            Command="{Binding SetSortDateDescendingCommand}"
+                            ToolTip.Tip="Most recently purchased first">
+                        <TextBlock Text="↓ Date" />
+                    </Button>
+                    <Button Classes="sort-btn"
+                            Classes.sort-active="{Binding IsGroupedView}"
+                            Command="{Binding SetSortBySizeCommand}"
+                            ToolTip.Tip="Group by bundle size">
+                        <TextBlock Text="⊞ Size" />
+                    </Button>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+        <Panel Grid.Row="1">
+            <ScrollViewer IsVisible="{Binding !ShowEmptyState}"
+                          Padding="32,16,32,0"
+                          HorizontalScrollBarVisibility="Disabled">
+                <StackPanel Spacing="0" Margin="0,0,0,32">
+                    <Border Classes="pinned-card"
+                            IsVisible="{Binding HasPinnedBundle}"
+                            x:CompileBindings="False"
+                            CornerRadius="16"
+                            Margin="0,0,0,16"
+                            Padding="24,20"
+                            ClipToBounds="True"
+                            BoxShadow="0 4 32 0 #402563EB, inset 0 1 0 0 #30FFFFFF">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Color="#1E3A8A" Offset="0.0" />
+                                <GradientStop Color="#3730A3" Offset="0.55" />
+                                <GradientStop Color="#4F46E5" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <StackPanel Spacing="14">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Border Classes="live-pulse"
+                                        CornerRadius="20" Padding="10,4"
+                                        Background="#33FFFFFF">
+                                    <TextBlock Text="● LIVE NOW"
+                                               FontSize="11" FontWeight="Bold"
+                                               Foreground="White" />
+                                </Border>
+                                <TextBlock Text="Currently Active"
+                                           FontSize="11" Foreground="White" Opacity="0.7"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding PinnedBundle.Name}"
+                                           FontSize="17" FontWeight="SemiBold"
+                                           Foreground="White" VerticalAlignment="Center"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding PinnedBundle.TotalDisplay}"
+                                           FontSize="26" FontWeight="Bold"
+                                           Foreground="White" VerticalAlignment="Center"
+                                           Margin="12,0,0,0" />
+                            </Grid>
+                            <StackPanel IsVisible="{Binding PinnedBundle.IsVolumeBundle}" Spacing="8">
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Right"
+                                               Text="{Binding PinnedBundle.PercentLabel}"
+                                               FontSize="14" FontWeight="Bold"
+                                               Foreground="White" VerticalAlignment="Center" />
+                                    <TextBlock Text="{Binding PinnedBundle.UsedOfTotalDisplay}"
+                                               FontSize="13" Foreground="White" Opacity="0.85"
+                                               VerticalAlignment="Center" />
+                                </DockPanel>
+                                <ProgressBar Value="{Binding PinnedBundle.PercentUsed}"
+                                             Maximum="100" MinHeight="10" CornerRadius="5"
+                                             Background="#33FFFFFF" Foreground="White">
+                                    <ProgressBar.Transitions>
+                                        <Transitions>
+                                            <DoubleTransition Property="Value" Duration="0:0:1"
+                                                              Easing="CubicEaseOut" />
+                                        </Transitions>
+                                    </ProgressBar.Transitions>
+                                </ProgressBar>
+                            </StackPanel>
+                            <StackPanel IsVisible="{Binding PinnedBundle.IsUnlimited}" Spacing="4">
+                                <TextBlock Text="Unlimited Data"
+                                           FontSize="15" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="{Binding PinnedBundle.MonthlyUsedDisplay}"
+                                           FontSize="13" Foreground="White" Opacity="0.8" />
+                            </StackPanel>
+                            <DockPanel>
+                                <TextBlock DockPanel.Dock="Right"
+                                           Text="{Binding PinnedBundle.EffectiveDate, StringFormat='Bought {0}'}"
+                                           FontSize="12" Foreground="White" Opacity="0.65"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding PinnedBundle.Speed, StringFormat='⚡ {0}'}"
+                                           FontSize="12" Foreground="White" Opacity="0.65"
+                                           VerticalAlignment="Center" />
+                            </DockPanel>
+                        </StackPanel>
+                    </Border>
+                    <ItemsControl ItemsSource="{Binding Bundles}"
+                                  IsVisible="{Binding !IsGroupedView}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:CompileBindings="False">
+                                <Border Classes="active-card" Margin="0,0,0,12">
+                                    <StackPanel Spacing="12">
                                         <DockPanel>
-                                            <TextBlock DockPanel.Dock="Right"
-                                                       Text="{Binding PercentLabel}"
-                                                       FontSize="14" FontWeight="Bold"
-                                                       VerticalAlignment="Center"
-                                                       Foreground="{Binding PercentUsed,
-                                                           Converter={x:Static conv:PercentToBrushConverter.Instance}}" />
-                                            <TextBlock Text="{Binding UsedOfTotalDisplay}"
-                                                       FontSize="12" VerticalAlignment="Center"
-                                                       Foreground="{StaticResource TextSecondaryBrush}" />
+                                            <Border IsVisible="{Binding IsOnline}"
+                                                    DockPanel.Dock="Right"
+                                                    Classes="online-badge"
+                                                    VerticalAlignment="Top">
+                                                <TextBlock Text="● LIVE" FontSize="11"
+                                                           FontWeight="Bold" Foreground="White" />
+                                            </Border>
+                                            <Border IsVisible="{Binding IsExpiringSoon}"
+                                                    DockPanel.Dock="Right"
+                                                    Classes="expiring-badge"
+                                                    VerticalAlignment="Top"
+                                                    Margin="0,0,8,0">
+                                                <TextBlock Text="⚠ EXPIRING SOON" FontSize="11"
+                                                           FontWeight="Bold" Foreground="White" />
+                                            </Border>
+                                            <StackPanel Spacing="2">
+                                                <TextBlock Text="{Binding Name}"
+                                                           FontSize="15" FontWeight="SemiBold"
+                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                <TextBlock Text="{Binding TotalDisplay}"
+                                                           FontSize="12" FontWeight="Medium"
+                                                           Foreground="{StaticResource AccentBrush}" />
+                                            </StackPanel>
                                         </DockPanel>
-                                        <ProgressBar Value="{Binding PercentUsed}"
-                                                     Maximum="100" MinHeight="12" CornerRadius="6"
-                                                     Background="{StaticResource BorderBrush}"
-                                                     Foreground="{Binding PercentUsed,
-                                                         Converter={x:Static conv:PercentToBrushConverter.Instance}}">
-                                            <ProgressBar.Transitions>
-                                                <Transitions>
-                                                    <DoubleTransition Property="Value" Duration="0:0:1" Easing="CubicEaseOut" />
-                                                </Transitions>
-                                            </ProgressBar.Transitions>
-                                        </ProgressBar>
-                                    </StackPanel>
-                                    <StackPanel IsVisible="{Binding IsUnlimited}" Spacing="4">
-                                        <Border CornerRadius="8" Padding="14,8"
-                                                Background="{StaticResource SurfaceBrush}">
+                                        <Border Height="1" Background="{StaticResource BorderBrush}" />
+                                        <StackPanel IsVisible="{Binding IsVolumeBundle}" Spacing="6">
                                             <DockPanel>
                                                 <TextBlock DockPanel.Dock="Right"
-                                                           Text="∞" FontSize="20" FontWeight="Bold"
-                                                           Foreground="{StaticResource AccentBrush}"
-                                                           VerticalAlignment="Center" />
-                                                <StackPanel Spacing="2" VerticalAlignment="Center">
-                                                    <TextBlock Text="Unlimited Data"
-                                                               FontWeight="SemiBold" FontSize="13"
-                                                               Foreground="{StaticResource AccentBrush}" />
-                                                    <TextBlock Text="{Binding MonthlyUsedDisplay}"
-                                                               FontSize="12"
-                                                               Foreground="{StaticResource TextSecondaryBrush}" />
-                                                </StackPanel>
+                                                           Text="{Binding PercentLabel}"
+                                                           FontSize="14" FontWeight="Bold"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="{Binding PercentUsed,
+                                                               Converter={x:Static conv:PercentToBrushConverter.Instance}}" />
+                                                <TextBlock Text="{Binding UsedOfTotalDisplay}"
+                                                           FontSize="12" VerticalAlignment="Center"
+                                                           Foreground="{StaticResource TextSecondaryBrush}" />
                                             </DockPanel>
-                                        </Border>
+                                            <ProgressBar Value="{Binding PercentUsed}"
+                                                         Maximum="100" MinHeight="12" CornerRadius="6"
+                                                         Background="{StaticResource BorderBrush}"
+                                                         Foreground="{Binding PercentUsed,
+                                                             Converter={x:Static conv:PercentToBrushConverter.Instance}}">
+                                                <ProgressBar.Transitions>
+                                                    <Transitions>
+                                                        <DoubleTransition Property="Value" Duration="0:0:1"
+                                                                          Easing="CubicEaseOut" />
+                                                    </Transitions>
+                                                </ProgressBar.Transitions>
+                                            </ProgressBar>
+                                        </StackPanel>
+                                        <StackPanel IsVisible="{Binding IsUnlimited}" Spacing="4">
+                                            <Border CornerRadius="8" Padding="14,8"
+                                                    Background="{StaticResource SurfaceBrush}">
+                                                <DockPanel>
+                                                    <TextBlock DockPanel.Dock="Right"
+                                                               Text="∞" FontSize="20" FontWeight="Bold"
+                                                               Foreground="{StaticResource AccentBrush}"
+                                                               VerticalAlignment="Center" />
+                                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                                        <TextBlock Text="Unlimited Data"
+                                                                   FontWeight="SemiBold" FontSize="13"
+                                                                   Foreground="{StaticResource AccentBrush}" />
+                                                        <TextBlock Text="{Binding MonthlyUsedDisplay}"
+                                                                   FontSize="12"
+                                                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                                                    </StackPanel>
+                                                </DockPanel>
+                                            </Border>
+                                        </StackPanel>
+                                        <DockPanel>
+                                            <TextBlock DockPanel.Dock="Right"
+                                                       Text="{Binding EffectiveDate, StringFormat='Bought {0}'}"
+                                                       FontSize="12"
+                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                       VerticalAlignment="Center" />
+                                            <TextBlock Text="{Binding Speed, StringFormat='⚡ {0}'}"
+                                                       FontSize="12"
+                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                       VerticalAlignment="Center" />
+                                        </DockPanel>
                                     </StackPanel>
-                                    <DockPanel>
-                                        <TextBlock DockPanel.Dock="Right"
-                                                   Text="{Binding ExpiryDate, StringFormat='Expires {0}'}"
-                                                   FontSize="12"
-                                                   Foreground="{StaticResource TextMutedBrush}"
-                                                   VerticalAlignment="Center" />
-                                        <TextBlock Text="{Binding Speed, StringFormat='⚡ {0}'}"
-                                                   FontSize="12"
-                                                   Foreground="{StaticResource TextMutedBrush}"
-                                                   VerticalAlignment="Center" />
-                                    </DockPanel>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </StackPanel>
-        </ScrollViewer>
-        <TextBlock IsVisible="{Binding ShowEmptyState}"
-                   Text="No active bundles found."
-                   FontSize="15"
-                   Foreground="{StaticResource TextMutedBrush}"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding GroupedBundles}"
+                                  IsVisible="{Binding IsGroupedView}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:CompileBindings="False">
+                                <Expander IsExpanded="{Binding IsExpanded}"
+                                          Margin="0,0,0,10"
+                                          HorizontalAlignment="Stretch"
+                                          HorizontalContentAlignment="Stretch">
+                                    <Expander.Header>
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <TextBlock Text="{Binding TypeName}"
+                                                       FontSize="13" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource TextPrimaryBrush}"
+                                                       VerticalAlignment="Center" />
+                                            <Border Background="#EFF6FF" CornerRadius="10"
+                                                    Padding="8,2" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding Bundles.Count}"
+                                                           FontSize="11" FontWeight="Bold"
+                                                           Foreground="{StaticResource AccentBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Expander.Header>
+                                    <ItemsControl ItemsSource="{Binding Bundles}"
+                                                  Margin="0,8,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:CompileBindings="False">
+                                                <Border Classes="active-card" Margin="0,0,0,8">
+                                                    <StackPanel Spacing="12">
+                                                        <DockPanel>
+                                                            <Border IsVisible="{Binding IsOnline}"
+                                                                    DockPanel.Dock="Right"
+                                                                    Classes="online-badge"
+                                                                    VerticalAlignment="Top">
+                                                                <TextBlock Text="● LIVE" FontSize="11"
+                                                                           FontWeight="Bold" Foreground="White" />
+                                                            </Border>
+                                                            <Border IsVisible="{Binding IsExpiringSoon}"
+                                                                    DockPanel.Dock="Right"
+                                                                    Classes="expiring-badge"
+                                                                    VerticalAlignment="Top"
+                                                                    Margin="0,0,8,0">
+                                                                <TextBlock Text="⚠ EXPIRING SOON" FontSize="11"
+                                                                           FontWeight="Bold" Foreground="White" />
+                                                            </Border>
+                                                            <StackPanel Spacing="2">
+                                                                <TextBlock Text="{Binding Name}"
+                                                                           FontSize="15" FontWeight="SemiBold"
+                                                                           Foreground="{StaticResource TextPrimaryBrush}" />
+                                                                <TextBlock Text="{Binding TotalDisplay}"
+                                                                           FontSize="12" FontWeight="Medium"
+                                                                           Foreground="{StaticResource AccentBrush}" />
+                                                            </StackPanel>
+                                                        </DockPanel>
+                                                        <Border Height="1" Background="{StaticResource BorderBrush}" />
+                                                        <StackPanel IsVisible="{Binding IsVolumeBundle}" Spacing="6">
+                                                            <DockPanel>
+                                                                <TextBlock DockPanel.Dock="Right"
+                                                                           Text="{Binding PercentLabel}"
+                                                                           FontSize="14" FontWeight="Bold"
+                                                                           VerticalAlignment="Center"
+                                                                           Foreground="{Binding PercentUsed,
+                                                                               Converter={x:Static conv:PercentToBrushConverter.Instance}}" />
+                                                                <TextBlock Text="{Binding UsedOfTotalDisplay}"
+                                                                           FontSize="12" VerticalAlignment="Center"
+                                                                           Foreground="{StaticResource TextSecondaryBrush}" />
+                                                            </DockPanel>
+                                                            <ProgressBar Value="{Binding PercentUsed}"
+                                                                         Maximum="100" MinHeight="12" CornerRadius="6"
+                                                                         Background="{StaticResource BorderBrush}"
+                                                                         Foreground="{Binding PercentUsed,
+                                                                             Converter={x:Static conv:PercentToBrushConverter.Instance}}">
+                                                                <ProgressBar.Transitions>
+                                                                    <Transitions>
+                                                                        <DoubleTransition Property="Value" Duration="0:0:1"
+                                                                                          Easing="CubicEaseOut" />
+                                                                    </Transitions>
+                                                                </ProgressBar.Transitions>
+                                                            </ProgressBar>
+                                                        </StackPanel>
+                                                        <StackPanel IsVisible="{Binding IsUnlimited}" Spacing="4">
+                                                            <Border CornerRadius="8" Padding="14,8"
+                                                                    Background="{StaticResource SurfaceBrush}">
+                                                                <DockPanel>
+                                                                    <TextBlock DockPanel.Dock="Right"
+                                                                               Text="∞" FontSize="20" FontWeight="Bold"
+                                                                               Foreground="{StaticResource AccentBrush}"
+                                                                               VerticalAlignment="Center" />
+                                                                    <StackPanel Spacing="2" VerticalAlignment="Center">
+                                                                        <TextBlock Text="Unlimited Data"
+                                                                                   FontWeight="SemiBold" FontSize="13"
+                                                                                   Foreground="{StaticResource AccentBrush}" />
+                                                                        <TextBlock Text="{Binding MonthlyUsedDisplay}"
+                                                                                   FontSize="12"
+                                                                                   Foreground="{StaticResource TextSecondaryBrush}" />
+                                                                    </StackPanel>
+                                                                </DockPanel>
+                                                            </Border>
+                                                        </StackPanel>
+                                                        <DockPanel>
+                                                            <TextBlock DockPanel.Dock="Right"
+                                                                       Text="{Binding EffectiveDate, StringFormat='Bought {0}'}"
+                                                                       FontSize="12"
+                                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                                       VerticalAlignment="Center" />
+                                                            <TextBlock Text="{Binding Speed, StringFormat='⚡ {0}'}"
+                                                                       FontSize="12"
+                                                                       Foreground="{StaticResource TextMutedBrush}"
+                                                                       VerticalAlignment="Center" />
+                                                        </DockPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Expander>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+            <Grid IsVisible="{Binding ShowEmptyState}">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="16">
+                    <Border Background="#EFF6FF" CornerRadius="28"
+                            Width="56" Height="56" HorizontalAlignment="Center">
+                        <TextBlock Text="📦"
+                                   FontSize="26"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="No active bundles"
+                               FontSize="17" FontWeight="SemiBold"
+                               Foreground="{StaticResource TextPrimaryBrush}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock Text="You don't have any active subscriptions yet."
+                               FontSize="13"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+                    <Button Classes="go-store-btn"
+                            Content="Go to Store"
+                            Command="{Binding GoToStoreCommand}"
+                            HorizontalAlignment="Center"
+                            Margin="0,8,0,0" />
+                </StackPanel>
+            </Grid>
+        </Panel>
     </Grid>
     <UserControl.Styles>
-        <Style Selector="Border.active-card">
-            <Setter Property="Background"      Value="{StaticResource CardBrush}" />
-            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius"    Value="12" />
-            <Setter Property="Padding"         Value="20,16" />
+        <Style Selector="Border.pinned-card">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
             <Setter Property="Transitions">
                 <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.2"
+                                                   Easing="CubicEaseOut" />
+                    <BoxShadowsTransition          Property="BoxShadow" Duration="0:0:0.2" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.pinned-card:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.008)" />
+            <Setter Property="BoxShadow"
+                    Value="0 8 48 0 #502563EB, 0 2 12 0 #20000000, inset 0 1 0 0 #40FFFFFF" />
+        </Style>
+        <Style Selector="Border.active-card">
+            <Setter Property="Background" Value="{StaticResource CardBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Padding" Value="20,16" />
+            <Setter Property="BoxShadow" Value="0 1 6 0 #0A000000" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"
+                                                   Easing="CubicEaseOut" />
                     <BoxShadowsTransition Property="BoxShadow" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
         <Style Selector="Border.active-card:pointerover">
-            <Setter Property="BoxShadow" Value="0 2 16 0 #15000000" />
+            <Setter Property="RenderTransform" Value="scale(1.012)" />
+            <Setter Property="BoxShadow"
+                    Value="0 6 24 0 #1A2563EB, 0 2 8 0 #10000000" />
+            <Setter Property="BorderBrush"     Value="{StaticResource AccentBrush}" />
         </Style>
         <Style Selector="Border.online-badge">
             <Setter Property="Background"   Value="#16A34A" />
@@ -206,6 +413,95 @@
         </Style>
         <Style Selector="ProgressBar /template/ Border#PART_Indicator">
             <Setter Property="CornerRadius" Value="6" />
+        </Style>
+        <Style Selector="Border.live-pulse">
+            <Style.Animations>
+                <Animation Duration="0:0:2.2" IterationCount="INFINITE" Easing="SineEaseInOut">
+                    <KeyFrame Cue="0%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="50%"> <Setter Property="Opacity" Value="0.45" /></KeyFrame>
+                    <KeyFrame Cue="100%"><Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Button.sort-btn">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}" />
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.sort-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.sort-btn TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        </Style>
+        <Style Selector="Button.sort-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+        </Style>
+        <Style Selector="Button.sort-btn.sort-active">
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="Button.sort-btn.sort-active /template/ ContentPresenter">
+            <Setter Property="Background" Value="#EFF6FF" />
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="Button.sort-btn.sort-active TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+        </Style>
+        <Style Selector="Expander /template/ ToggleButton">
+            <Setter Property="Padding" Value="0,10" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Expander /template/ ToggleButton:pointerover">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+        </Style>
+        <Style Selector="Expander /template/ ToggleButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="Button.go-store-btn">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="28,11" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.go-store-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.go-store-btn:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.04)" />
+        </Style>
+        <Style Selector="Button.go-store-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.go-store-btn:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
         </Style>
     </UserControl.Styles>
 </UserControl>

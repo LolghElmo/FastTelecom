@@ -8,10 +8,11 @@
           Background="{StaticResource SurfaceBrush}">
         <Border Grid.Row="1" Grid.Column="1"
                 Classes="login-card"
-                MinWidth="400"
+                MinWidth="420"
                 Padding="44,40">
             <StackPanel Spacing="0">
-                <StackPanel HorizontalAlignment="Center" Spacing="6" Margin="0,0,0,32">
+                <StackPanel HorizontalAlignment="Center" Spacing="6"
+                            Margin="0,0,0,32">
                     <Image Source="avares://FastTelecom/Assets/icon-256.png"
                            Width="64" Height="64"
                            HorizontalAlignment="Center" />
@@ -25,12 +26,71 @@
                                Foreground="{StaticResource TextSecondaryBrush}"
                                HorizontalAlignment="Center" />
                 </StackPanel>
+                <StackPanel IsVisible="{Binding HasSavedAccounts}"
+                            Margin="0,0,0,8">
+                    <TextBlock Text="QUICK ACCESS"
+                               FontSize="10" FontWeight="Bold" LetterSpacing="1.5"
+                               Foreground="{StaticResource TextMutedBrush}"
+                               Margin="0,0,0,10" />
+                    <ItemsControl ItemsSource="{Binding SavedAccounts}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:CompileBindings="False">
+                                <Border Classes="chip-wrap"
+                                        Classes.chip-selected="{Binding IsSelected}"
+                                        Margin="0,0,8,8">
+                                    <StackPanel Orientation="Horizontal" Spacing="0">
+                                        <Button Classes="chip-select-btn"
+                                                Command="{Binding $parent[UserControl].DataContext.SelectAccountCommand}"
+                                                CommandParameter="{Binding}">
+                                            <StackPanel Orientation="Horizontal" Spacing="8"
+                                                        VerticalAlignment="Center">
+                                                <Border Classes="account-avatar">
+                                                    <TextBlock Text="{Binding Initial}"
+                                                               FontSize="12" FontWeight="Bold"
+                                                               Foreground="{StaticResource AccentBrush}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </Border>
+                                                <TextBlock Text="{Binding Username}"
+                                                           FontSize="13" FontWeight="Medium"
+                                                           Foreground="{StaticResource TextPrimaryBrush}"
+                                                           VerticalAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Border Width="1"
+                                                Background="{StaticResource BorderBrush}"
+                                                Margin="4,6" />
+                                        <Button Classes="chip-remove-btn"
+                                                Command="{Binding $parent[UserControl].DataContext.RemoveAccountCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip.Tip="Remove saved account">
+                                            <TextBlock Text="✕"
+                                                       FontSize="10"
+                                                       Foreground="{StaticResource TextMutedBrush}" />
+                                        </Button>
+
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                <Border IsVisible="{Binding HasSavedAccounts}"
+                        Height="1"
+                        Background="{StaticResource BorderBrush}"
+                        Margin="0,0,0,24" />
                 <StackPanel Spacing="16">
                     <StackPanel Spacing="6">
                         <TextBlock Text="Username"
                                    FontSize="13" FontWeight="Medium"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBox x:Name="UsernameBox"
+                                 Classes="form-input"
                                  Text="{Binding Username, Mode=TwoWay}"
                                  Watermark="Enter your username"
                                  FontSize="14"
@@ -43,6 +103,7 @@
                                    FontSize="13" FontWeight="Medium"
                                    Foreground="{StaticResource TextPrimaryBrush}" />
                         <TextBox x:Name="PasswordBox"
+                                 Classes="form-input"
                                  Text="{Binding Password, Mode=TwoWay}"
                                  PasswordChar="&#x2022;"
                                  Watermark="Enter your password"
@@ -60,11 +121,7 @@
                     </CheckBox>
                     <Border IsVisible="{Binding ErrorMessage,
                                 Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                            Background="#FEF2F2"
-                            BorderBrush="#FECACA"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="12,10">
+                            Classes="toast-error">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <TextBlock Text="⚠"
                                        FontSize="14"
@@ -78,22 +135,22 @@
                         </StackPanel>
                     </Border>
                     <Border IsVisible="{Binding ShowAttemptMessage}"
-                            Background="#EFF6FF"
-                            BorderBrush="#BFDBFE"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Padding="12,10">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
-                                <Ellipse Classes="dot-1" Width="7" Height="7" />
-                                <Ellipse Classes="dot-2" Width="7" Height="7" />
-                                <Ellipse Classes="dot-3" Width="7" Height="7" />
+                            Classes="toast-info">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Left"
+                                        Orientation="Horizontal" Spacing="4"
+                                        VerticalAlignment="Center"
+                                        Margin="0,0,10,0">
+                                <Ellipse Classes="dot-1" Width="6" Height="6" />
+                                <Ellipse Classes="dot-2" Width="6" Height="6" />
+                                <Ellipse Classes="dot-3" Width="6" Height="6" />
                             </StackPanel>
                             <TextBlock Text="{Binding AttemptMessage}"
                                        FontSize="13"
                                        Foreground="{StaticResource AccentBrush}"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
+                        </DockPanel>
                     </Border>
                     <Button Command="{Binding LoginCommand}"
                             HorizontalAlignment="Stretch"
@@ -117,6 +174,17 @@
                             </StackPanel>
                         </Panel>
                     </Button>
+                    <Button IsVisible="{Binding IsLoading}"
+                            Command="{Binding CancelLoginCommand}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            CornerRadius="8"
+                            Padding="0,11"
+                            FontSize="14"
+                            FontWeight="Medium"
+                            Classes="cancel-btn"
+                            Content="Cancel Request" />
+
                 </StackPanel>
             </StackPanel>
         </Border>
@@ -129,7 +197,29 @@
             <Setter Property="CornerRadius"    Value="16" />
             <Setter Property="BoxShadow"       Value="0 4 32 0 #12000000, 0 1 4 0 #08000000" />
         </Style>
-
+        <Style Selector="TextBox.form-input /template/ Border#PART_BorderElement">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition       Property="BorderBrush" Duration="0:0:0.15" />
+                    <BoxShadowsTransition  Property="BoxShadow"   Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBox.form-input:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#93C5FD" />
+        </Style>
+        <Style Selector="TextBox.form-input:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BoxShadow"   Value="0 0 0 3 #2563A6F7" />
+        </Style>
+        <Style Selector="Button.login-btn">
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
         <Style Selector="Button.login-btn /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentBrush}" />
             <Setter Property="Foreground" Value="White" />
@@ -139,12 +229,152 @@
                 </Transitions>
             </Setter>
         </Style>
+        <Style Selector="Button.login-btn:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.015)" />
+        </Style>
         <Style Selector="Button.login-btn:pointerover /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        </Style>
+        <Style Selector="Button.login-btn:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.97)" />
         </Style>
         <Style Selector="Button.login-btn:disabled /template/ ContentPresenter">
             <Setter Property="Background" Value="{StaticResource AccentBrush}" />
             <Setter Property="Opacity"    Value="0.55" />
+        </Style>
+        <Style Selector="Button.cancel-btn">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
+            <Setter Property="Cursor"          Value="Hand" />
+        </Style>
+        <Style Selector="Button.cancel-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.cancel-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#FEF2F2" />
+            <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+        </Style>
+        <Style Selector="Button.cancel-btn:pointerover">
+            <Setter Property="BorderBrush" Value="{StaticResource DangerBrush}" />
+        </Style>
+        <Style Selector="Border.toast-error">
+            <Setter Property="Background"      Value="#FEF2F2" />
+            <Setter Property="BorderBrush"     Value="#FECACA" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="8" />
+            <Setter Property="Padding"         Value="12,10" />
+        </Style>
+        <Style Selector="Border.toast-info">
+            <Setter Property="Background"      Value="#EFF6FF" />
+            <Setter Property="BorderBrush"     Value="#BFDBFE" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="8" />
+            <Setter Property="Padding"         Value="12,10" />
+        </Style>
+        <Style Selector="Border.chip-wrap">
+            <Setter Property="Background"      Value="{StaticResource SurfaceBrush}" />
+            <Setter Property="BorderBrush"     Value="{StaticResource BorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius"    Value="20" />
+            <Setter Property="ClipToBounds"    Value="True" />
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition               Property="BorderBrush"     Duration="0:0:0.15" />
+                    <BrushTransition               Property="Background"      Duration="0:0:0.15" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15"
+                                                   Easing="CubicEaseOut" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Border.chip-selected">
+            <Setter Property="BorderBrush"     Value="{StaticResource AccentBrush}" />
+            <Setter Property="Background"      Value="#EFF6FF" />
+            <Setter Property="RenderTransform" Value="scale(1.04)" />
+        </Style>
+        <Style Selector="Button.chip-select-btn">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding"         Value="10,7" />
+            <Setter Property="Cursor"          Value="Hand" />
+        </Style>
+        <Style Selector="Button.chip-select-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.chip-select-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#0A2563EB" />
+        </Style>
+        <Style Selector="Button.chip-remove-btn">
+            <Setter Property="Background"      Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding"         Value="8,7" />
+            <Setter Property="Cursor"          Value="Hand" />
+        </Style>
+        <Style Selector="Button.chip-remove-btn /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.12" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.chip-remove-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#0ADC2626" />
+        </Style>
+        <Style Selector="Button.chip-remove-btn:pointerover TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource DangerBrush}" />
+        </Style>
+        <Style Selector="Border.account-avatar">
+            <Setter Property="Background"   Value="#EFF6FF" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="Width"        Value="24" />
+            <Setter Property="Height"       Value="24" />
+        </Style>
+        <Style Selector="Ellipse.dot-1">
+            <Setter Property="Fill" Value="{StaticResource AccentBrush}" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse.dot-2">
+            <Setter Property="Fill" Value="{StaticResource AccentBrush}" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite" Delay="0:0:0.22">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+        <Style Selector="Ellipse.dot-3">
+            <Setter Property="Fill" Value="{StaticResource AccentBrush}" />
+            <Style.Animations>
+                <Animation Duration="0:0:1.4" IterationCount="Infinite" Delay="0:0:0.44">
+                    <KeyFrame Cue="0%">   <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="20%">  <Setter Property="Opacity" Value="1.0"  /></KeyFrame>
+                    <KeyFrame Cue="60%">  <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                    <KeyFrame Cue="100%"> <Setter Property="Opacity" Value="0.3"  /></KeyFrame>
+                </Animation>
+            </Style.Animations>
         </Style>
         <Style Selector="Ellipse.dot-w1">
             <Setter Property="Fill" Value="White" />

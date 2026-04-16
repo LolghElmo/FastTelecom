@@ -1,3 +1,5 @@
+using System;
+
 namespace FastTelecom.Application.DTOs
 {
     public sealed class ActiveBundleDto
@@ -16,6 +18,10 @@ namespace FastTelecom.Application.DTOs
         public string ExpiryDate { get; init; } = string.Empty;
         public string Speed { get; init; } = string.Empty;
         public bool IsOnline { get; init; }
-        public bool IsExpiringSoon { get; init; } 
+        public bool IsExpiringSoon { get; init; }
+        public DateTime? ExpiryDateValue    { get; init; }
+        public DateTime? EffectiveDateValue { get; init; }
+        public long VolumeMb { get; init; }
+        public string BundleType { get; init; } = "Standard";
     }
 }

@@ -10,11 +10,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
     public partial class MainWindowViewModel : ViewModelBase
     {
         private readonly INavigationService _nav;
-        private readonly CredentialStore    _credentials;
-
+        private readonly CredentialStore _credentials;
         public UpdateViewModel Update { get; }
-
-
         public string AppVersion { get; } =
             typeof(MainWindowViewModel).Assembly
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
@@ -22,13 +19,25 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                 .Split('+')[0]
                 ?? "0.0.0";
 
-        [ObservableProperty] private ViewModelBase _currentView = null!;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsDashboardPage))]
+        [NotifyPropertyChangedFor(nameof(IsBundlesPage))]
+        [NotifyPropertyChangedFor(nameof(IsActiveBundlesPage))]
+        [NotifyPropertyChangedFor(nameof(CurrentPageSubtitle))]
+        private ViewModelBase _currentView = null!;
         [ObservableProperty] private bool _showShell;
         [ObservableProperty] private string _currentPageTitle = string.Empty;
+        public bool IsDashboardPage     => CurrentView is DashboardViewModel;
+        public bool IsBundlesPage       => CurrentView is BundlesViewModel;
+        public bool IsActiveBundlesPage => CurrentView is ActiveBundlesViewModel;
+        public string CurrentPageSubtitle => CurrentView switch
+        {
+            BundlesViewModel => "Choose the plan that fits your needs",
+            _ => string.Empty,
+        };
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsOverlayVisible))]
         private bool _isPageLoading;
-
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsOverlayVisible))]
         private bool _isPageFailed;
@@ -38,7 +47,6 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         public bool IsOverlayVisible => IsPageLoading || IsPageFailed || Update.ShowUpdatePrompt;
 
         private PageLoadViewModelBase? _trackedPage;
-
 
         public MainWindowViewModel(INavigationService nav, CredentialStore credentials)
         {
@@ -53,10 +61,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                     OnPropertyChanged(nameof(IsOverlayVisible));
             };
         }
-
-
         public void NavigateToLogin() => _nav.NavigateToLogin();
-
         public async Task TryAutoLoginAsync(string username, string password)
         {
             _nav.NavigateToLogin();
@@ -81,18 +86,18 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             }
             else
             {
-                IsPageLoading      = false;
-                IsPageFailed       = false;
+                IsPageLoading = false;
+                IsPageFailed = false;
                 PageLoadingMessage = string.Empty;
             }
 
             CurrentPageTitle = CurrentView switch
             {
-                DashboardViewModel     => "Dashboard",
-                BundlesViewModel       => "Bundles",
+                DashboardViewModel => "Dashboard",
+                BundlesViewModel => "Bundles",
                 ActiveBundlesViewModel => "My Bundles",
-                LoginViewModel         => "Sign In",
-                _                      => string.Empty,
+                LoginViewModel => "Sign In",
+                _ => string.Empty,
             };
 
             if (CurrentView is DashboardViewModel && !Update.IsUpdateAvailable)

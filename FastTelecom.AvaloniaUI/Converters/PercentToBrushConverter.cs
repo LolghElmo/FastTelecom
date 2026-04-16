@@ -14,9 +14,9 @@ namespace FastTelecom.AvaloniaUI.Converters
             var pct = value is double d ? d : 0;
             return pct switch
             {
-                < 60 => new SolidColorBrush(Color.Parse("#16A34A")), 
-                < 80 => new SolidColorBrush(Color.Parse("#D97706")),
-                _    => new SolidColorBrush(Color.Parse("#DC2626")), 
+                <= 70 => new SolidColorBrush(Color.Parse("#16A34A")),
+                <= 90 => new SolidColorBrush(Color.Parse("#D97706")),
+                _ => new SolidColorBrush(Color.Parse("#DC2626")),
             };
         }
 
