@@ -23,8 +23,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ApplyUpdateCommand))]
-        private bool   _isUpdateAvailable;
-        [ObservableProperty] private bool   _showUpdatePrompt;
+        private bool _isUpdateAvailable;
+        [ObservableProperty] private bool _showUpdatePrompt;
         [ObservableProperty] private string _availableVersion = string.Empty;
 
         [RelayCommand(CanExecute = nameof(CanCheck))]
@@ -38,13 +38,13 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                 if (_pendingUpdate is not null)
                 {
                     IsUpdateAvailable = true;
-                    AvailableVersion  = _pendingUpdate.TargetFullRelease.Version.ToString();
-                    ShowUpdatePrompt  = true;
+                    AvailableVersion = _pendingUpdate.TargetFullRelease.Version.ToString();
+                    ShowUpdatePrompt = true;
                 }
                 else
                 {
                     IsUpdateAvailable = false;
-                    AvailableVersion  = string.Empty;
+                    AvailableVersion = string.Empty;
                 }
             }
             catch (Exception)

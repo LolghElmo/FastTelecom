@@ -1,12 +1,9 @@
 using Nuke.Common;
-using Nuke.Common.CI;
 using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using System;
-using System.Linq;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 [GitHubActions(

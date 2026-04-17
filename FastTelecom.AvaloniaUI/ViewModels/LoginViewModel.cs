@@ -6,7 +6,6 @@ using FastTelecom.AvaloniaUI.Services;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace FastTelecom.AvaloniaUI.ViewModels
 {

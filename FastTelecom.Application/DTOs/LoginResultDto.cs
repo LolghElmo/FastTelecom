@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FastTelecom.Application.DTOs
+﻿namespace FastTelecom.Application.DTOs
 {
     public sealed class LoginResultDto
     {
@@ -12,8 +8,8 @@ namespace FastTelecom.Application.DTOs
         public bool IsCredentialError { get; init; }
         public static LoginResultDto Fail(string error, bool isCredentialError = false) => new()
         {
-            Success           = false,
-            Error             = error,
+            Success = false,
+            Error = error,
             IsCredentialError = isCredentialError,
         };
     }

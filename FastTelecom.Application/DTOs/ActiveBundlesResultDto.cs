@@ -9,7 +9,7 @@ namespace FastTelecom.Application.DTOs
         public static ActiveBundlesResultDto Fail(string error) => new()
         {
             Success = false,
-            Error   = error,
+            Error = error,
         };
     }
 }

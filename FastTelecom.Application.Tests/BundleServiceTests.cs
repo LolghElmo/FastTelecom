@@ -1,5 +1,4 @@
-﻿using FastTelecom.Application.DTOs;
-using FastTelecom.Application.Services;
+﻿using FastTelecom.Application.Services;
 using FastTelecom.Domain.Interfaces;
 using FastTelecom.Domain.Models;
 using NSubstitute;
@@ -185,7 +184,7 @@ namespace FastTelecom.Application.Tests
                     {
                         ProductID = "1",
                         ProductName = "Unlimited Plan",
-                        MaxServiceUsage = 0, 
+                        MaxServiceUsage = 0,
                         FreeVolume = 0,
                         AccumulateInfo = new ActiveBundleAccumulateInfo { MonthAccuVolume = 0 }
                     }
@@ -213,7 +212,7 @@ namespace FastTelecom.Application.Tests
                     {
                         ProductID = "2",
                         ProductName = "10 GB Plan",
-                        MaxServiceUsage = 10240, 
+                        MaxServiceUsage = 10240,
                         FreeVolume = 10240 * 1024L,
                         AccumulateInfo = new ActiveBundleAccumulateInfo { MonthAccuVolume = 0 }
                     }
@@ -294,7 +293,7 @@ namespace FastTelecom.Application.Tests
                         ProductName = "Active Plan",
                         MaxServiceUsage = 1024,
                         FreeVolume = 1024 * 1024L,
-                        OnlineSessionNum = 1, 
+                        OnlineSessionNum = 1,
                         AccumulateInfo = new ActiveBundleAccumulateInfo { MonthAccuVolume = 0 }
                     }
                 });

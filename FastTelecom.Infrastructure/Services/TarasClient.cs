@@ -1,8 +1,5 @@
 ﻿using FastTelecom.Domain.Interfaces;
 using FastTelecom.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
 namespace FastTelecom.Infrastructure.Services
@@ -79,10 +76,10 @@ namespace FastTelecom.Infrastructure.Services
                 {
                     return new LoginResponse
                     {
-                        Success           = false,
-                        Error             = "Invalid username or password.",
+                        Success = false,
+                        Error = "Invalid username or password.",
                         IsCredentialError = true,
-                        RawResponse       = body,
+                        RawResponse = body,
                     };
                 }
 
@@ -111,7 +108,7 @@ namespace FastTelecom.Infrastructure.Services
             }
             catch (OperationCanceledException)
             {
-                throw; 
+                throw;
             }
             catch (Exception ex)
             {
@@ -128,25 +125,25 @@ namespace FastTelecom.Infrastructure.Services
             string password,
             CancellationToken cancellationToken = default)
         {
-            var uNC      = _crypto.Encrypt(username);
-            var uPC      = _crypto.Encrypt(password);
+            var uNC = _crypto.Encrypt(username);
+            var uPC = _crypto.Encrypt(password);
             var userName = _crypto.UserNameHash;
             var userPswd = _crypto.UserPswdHash;
-            var rand     = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
-            var rndm     = GenerateRandomString(6);
+            var rand = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+            var rndm = GenerateRandomString(6);
 
             var formData = new Dictionary<string, string>
             {
-                ["rndm"]     = rndm,
-                ["x"]        = "1",
-                ["LangCo"]   = "1",
-                ["vSource"]  = "1",
-                ["isWeb"]    = "1",
-                ["F_ID"]     = "3",
+                ["rndm"] = rndm,
+                ["x"] = "1",
+                ["LangCo"] = "1",
+                ["vSource"] = "1",
+                ["isWeb"] = "1",
+                ["F_ID"] = "3",
                 ["userName"] = userName,
                 ["userPswd"] = userPswd,
-                ["uNC"]      = uNC,
-                ["uPC"]      = uPC,
+                ["uNC"] = uNC,
+                ["uPC"] = uPC,
             };
 
             var url = $"{BaseUrl}?Rand={rand}";

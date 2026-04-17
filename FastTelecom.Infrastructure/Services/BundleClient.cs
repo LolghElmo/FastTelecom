@@ -1,12 +1,7 @@
 using FastTelecom.Domain.Interfaces;
 using FastTelecom.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FastTelecom.Infrastructure.Services
 {
@@ -32,25 +27,25 @@ namespace FastTelecom.Infrastructure.Services
             string password,
             CancellationToken cancellationToken = default)
         {
-            var uNC      = _crypto.Encrypt(username);
-            var uPC      = _crypto.Encrypt(password);
+            var uNC = _crypto.Encrypt(username);
+            var uPC = _crypto.Encrypt(password);
             var userName = _crypto.UserNameHash;
             var userPswd = _crypto.UserPswdHash;
-            var rand     = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
-            var rndm     = GenerateRandomString(6);
+            var rand = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+            var rndm = GenerateRandomString(6);
 
             var formData = new Dictionary<string, string>
             {
-                ["rndm"]     = rndm,
-                ["x"]        = "1",
-                ["LangCo"]   = "1",
-                ["vSource"]  = "1",
-                ["isWeb"]    = "1",
-                ["F_ID"]     = "6",         
+                ["rndm"] = rndm,
+                ["x"] = "1",
+                ["LangCo"] = "1",
+                ["vSource"] = "1",
+                ["isWeb"] = "1",
+                ["F_ID"] = "6",
                 ["userName"] = userName,
                 ["userPswd"] = userPswd,
-                ["uNC"]      = uNC,
-                ["uPC"]      = uPC,
+                ["uNC"] = uNC,
+                ["uPC"] = uPC,
             };
 
             var url = $"{BundleListUrl}?Rand={rand}";
@@ -86,17 +81,17 @@ namespace FastTelecom.Infrastructure.Services
 
             var asRequest = JsonSerializer.Serialize(new
             {
-                user     = username,
-                Basic    = basic.ToString(),
+                user = username,
+                Basic = basic.ToString(),
                 Products = new[] { bundleId },
             });
 
             var formData = new Dictionary<string, string>
             {
-                ["x"]               = "1",
-                ["as_request"]      = asRequest,
+                ["x"] = "1",
+                ["as_request"] = asRequest,
                 ["Products_parent"] = "5",
-                ["LangCo"]          = "1",
+                ["LangCo"] = "1",
             };
 
             var url = $"{PurchaseUrl}?Rand={rand}";
@@ -122,7 +117,7 @@ namespace FastTelecom.Infrastructure.Services
 
                 // Response: {"response":[{"productID":"...","phone":"...","code":200,"result":"...","msg":"..."}]}
                 var wrapper = JsonSerializer.Deserialize<PurchaseResponseWrapper>(body.Trim(), JsonOpts);
-                var raw     = wrapper?.Response?.FirstOrDefault();
+                var raw = wrapper?.Response?.FirstOrDefault();
 
                 return new PurchaseApiResponse
                 {
@@ -130,11 +125,11 @@ namespace FastTelecom.Infrastructure.Services
                     Item = raw is null ? null : new PurchaseItemResult
                     {
                         ProductId = raw.ProductId,
-                        Phone     = raw.Phone,
-                        Vol       = raw.Vol,
-                        Code      = raw.Code,
-                        Result    = raw.Result,
-                        Msg       = raw.Msg,
+                        Phone = raw.Phone,
+                        Vol = raw.Vol,
+                        Code = raw.Code,
+                        Result = raw.Result,
+                        Msg = raw.Msg,
                     },
                 };
             }

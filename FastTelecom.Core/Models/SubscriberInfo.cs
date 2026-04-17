@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FastTelecom.Domain.Models
+﻿namespace FastTelecom.Domain.Models
 {
     public sealed class SubscriberInfo
     {

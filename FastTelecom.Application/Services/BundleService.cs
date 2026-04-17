@@ -1,10 +1,6 @@
 using FastTelecom.Application.DTOs;
 using FastTelecom.Domain.Interfaces;
-using System;
 using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FastTelecom.Application.Services
 {
@@ -37,14 +33,14 @@ namespace FastTelecom.Application.Services
                 return new BundlesResultDto
                 {
                     Success = true,
-                    Basic   = response.Basic,
+                    Basic = response.Basic,
                     Bundles = response.Bundles?
                         .Select(b => new BundleDto
                         {
-                            Id          = b.Id,
-                            Name        = b.Name?.Trim() ?? string.Empty,
-                            Price       = b.Price,
-                            VolGb       = b.Vol,
+                            Id = b.Id,
+                            Name = b.Name?.Trim() ?? string.Empty,
+                            Price = b.Price,
+                            VolGb = b.Vol,
                             IsAvailable = b.IsEnable == 1,
                         })
                         .ToArray() ?? [],
@@ -80,7 +76,7 @@ namespace FastTelecom.Application.Services
                 {
                     Success = success,
                     Message = success ? "Bundle purchased successfully!" : null,
-                    Error   = success ? null : (string.IsNullOrWhiteSpace(item.Msg)
+                    Error = success ? null : (string.IsNullOrWhiteSpace(item.Msg)
                                   ? "Purchase was unsuccessful. Please try again."
                                   : item.Msg),
                 };
@@ -160,9 +156,9 @@ namespace FastTelecom.Application.Services
         private static string InferBundleType(string name)
         {
             if (name.Contains("الافتراضية")) return "Basic";
-            if (name.Contains("سرعة")  || name.Contains("بوست")  ||
+            if (name.Contains("سرعة") || name.Contains("بوست") ||
                 name.Contains("Speed") || name.Contains("Boost")) return "Speed Boost";
-            if (name.Contains("ليل")   || name.Contains("نايت")  ||
+            if (name.Contains("ليل") || name.Contains("نايت") ||
                 name.Contains("Night") || name.Contains("Nightly")) return "Nightly";
             if (name.Contains("لا محدود") || name.Contains("مفتوح") ||
                 name.Contains("Unlimited")) return "Unlimited";

@@ -8,7 +8,7 @@ namespace FastTelecom.Application.DTOs
         public static PurchaseResultDto Fail(string error) => new()
         {
             Success = false,
-            Error   = error,
+            Error = error,
         };
     }
 }

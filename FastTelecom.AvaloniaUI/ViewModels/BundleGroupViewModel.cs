@@ -15,8 +15,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         public BundleGroupViewModel(string typeName, IEnumerable<ActiveBundleDto> bundles,
                                     bool isExpanded = false)
         {
-            TypeName    = typeName;
-            Bundles     = new ObservableCollection<ActiveBundleDto>(bundles);
+            TypeName = typeName;
+            Bundles = new ObservableCollection<ActiveBundleDto>(bundles);
             _isExpanded = isExpanded;
         }
     }

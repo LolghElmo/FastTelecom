@@ -1,4 +1,3 @@
-using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using FastTelecom.Application;
@@ -47,7 +46,7 @@ namespace FastTelecom.AvaloniaUI
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var mainVm          = Services.GetRequiredService<MainWindowViewModel>();
+                var mainVm = Services.GetRequiredService<MainWindowViewModel>();
                 var credentialStore = Services.GetRequiredService<CredentialStore>();
 
                 var saved = credentialStore.TryLoad();

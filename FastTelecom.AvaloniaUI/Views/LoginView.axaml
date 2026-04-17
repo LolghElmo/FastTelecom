@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:FastTelecom.AvaloniaUI.ViewModels"
              x:Class="FastTelecom.AvaloniaUI.Views.LoginView"
-             x:DataType="vm:LoginViewModel">
+             x:DataType="vm:LoginViewModel"
+             x:Name="LoginViewRoot">
     <Grid RowDefinitions="*,Auto,*"
           ColumnDefinitions="*,Auto,*"
           Background="{StaticResource SurfaceBrush}">
@@ -45,7 +46,7 @@
                                         Margin="0,0,8,8">
                                     <StackPanel Orientation="Horizontal" Spacing="0">
                                         <Button Classes="chip-select-btn"
-                                                Command="{Binding $parent[UserControl].DataContext.SelectAccountCommand}"
+                                                Command="{Binding #LoginViewRoot.DataContext.SelectAccountCommand}"
                                                 CommandParameter="{Binding}">
                                             <StackPanel Orientation="Horizontal" Spacing="8"
                                                         VerticalAlignment="Center">
@@ -66,7 +67,7 @@
                                                 Background="{StaticResource BorderBrush}"
                                                 Margin="4,6" />
                                         <Button Classes="chip-remove-btn"
-                                                Command="{Binding $parent[UserControl].DataContext.RemoveAccountCommand}"
+                                                Command="{Binding #LoginViewRoot.DataContext.RemoveAccountCommand}"
                                                 CommandParameter="{Binding}"
                                                 ToolTip.Tip="Remove saved account">
                                             <TextBlock Text="✕"

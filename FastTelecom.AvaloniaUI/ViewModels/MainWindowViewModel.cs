@@ -27,8 +27,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private ViewModelBase _currentView = null!;
         [ObservableProperty] private bool _showShell;
         [ObservableProperty] private string _currentPageTitle = string.Empty;
-        public bool IsDashboardPage     => CurrentView is DashboardViewModel;
-        public bool IsBundlesPage       => CurrentView is BundlesViewModel;
+        public bool IsDashboardPage => CurrentView is DashboardViewModel;
+        public bool IsBundlesPage => CurrentView is BundlesViewModel;
         public bool IsActiveBundlesPage => CurrentView is ActiveBundlesViewModel;
         public string CurrentPageSubtitle => CurrentView switch
         {

@@ -1,5 +1,4 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,11 +8,11 @@ namespace FastTelecom.AvaloniaUI.ViewModels
     public abstract partial class PageLoadViewModelBase : ViewModelBase
     {
         private const int MaxAttempts = 5;
-        private const int ShowOverlayThresholdMs = 400;   
+        private const int ShowOverlayThresholdMs = 400;
         private const int RetryDelayMs = 1500;
 
-        [ObservableProperty] private bool   _isLoading;
-        [ObservableProperty] private bool   _hasFailed;
+        [ObservableProperty] private bool _isLoading;
+        [ObservableProperty] private bool _hasFailed;
         [ObservableProperty] private string _loadingMessage = string.Empty;
 
         private CancellationTokenSource? _loadCts;
@@ -26,7 +25,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             _loadCts = CancellationTokenSource.CreateLinkedTokenSource(externalCt);
             var ct = _loadCts.Token;
 
-            IsLoading = false;   
+            IsLoading = false;
             HasFailed = false;
             LoadingMessage = $"1 / {MaxAttempts} - Connecting to server…";
 
@@ -37,19 +36,19 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             {
 
                 var firstFetch = FetchAsync(ct);
-                var threshold  = Task.Delay(ShowOverlayThresholdMs, ct);
+                var threshold = Task.Delay(ShowOverlayThresholdMs, ct);
 
                 if (await Task.WhenAny(firstFetch, threshold) == threshold)
-                    IsLoading = true;   
+                    IsLoading = true;
 
                 bool ok1;
-                try   { ok1 = await firstFetch; }
+                try { ok1 = await firstFetch; }
                 catch (OperationCanceledException) { throw; }
                 catch { ok1 = false; }
 
                 if (ok1)
                 {
-                    succeeded = true;   
+                    succeeded = true;
                 }
                 else
                 {
@@ -72,7 +71,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                             throw;
                         }
                         catch
-                        { 
+                        {
                             ok = false;
                         }
 

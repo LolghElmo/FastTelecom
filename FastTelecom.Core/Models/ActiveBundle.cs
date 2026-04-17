@@ -5,8 +5,8 @@ namespace FastTelecom.Domain.Models
         public string? ProductID { get; set; }
         public string? ProductName { get; set; }
         public int RatingMode { get; set; }
-        public long MaxServiceUsage { get; set; }   
-        public long FreeVolume { get; set; }   
+        public long MaxServiceUsage { get; set; }
+        public long FreeVolume { get; set; }
         public string? EffTime { get; set; }
         public string? ExpTime { get; set; }
         public string? Speed { get; set; }

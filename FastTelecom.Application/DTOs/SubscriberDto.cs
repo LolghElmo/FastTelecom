@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FastTelecom.Application.DTOs
+﻿namespace FastTelecom.Application.DTOs
 {
     public sealed class SubscriberDto
     {

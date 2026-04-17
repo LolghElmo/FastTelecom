@@ -1,9 +1,6 @@
 ﻿using FastTelecom.Application.DTOs;
 using FastTelecom.Domain.Interfaces;
 using FastTelecom.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FastTelecom.Application.Services
 {
@@ -15,7 +12,7 @@ namespace FastTelecom.Application.Services
         public AuthenticationService(ITarasClient tarasClient, SessionStore session)
         {
             _tarasClient = tarasClient;
-            _session     = session;
+            _session = session;
         }
 
         public async Task<LoginResultDto> LoginAsync(
@@ -39,7 +36,7 @@ namespace FastTelecom.Application.Services
             _session.Password = request.Password;
             return new LoginResultDto
             {
-                Success    = true,
+                Success = true,
                 Subscriber = MapToDto(response.Subscriber),
             };
         }

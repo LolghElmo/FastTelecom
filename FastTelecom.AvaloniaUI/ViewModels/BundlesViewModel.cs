@@ -45,7 +45,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             var result = await _bundleService.GetBundlesAsync(ct);
 
             if (!result.Success)
-                return false;  
+                return false;
 
             _basic = result.Basic;
 

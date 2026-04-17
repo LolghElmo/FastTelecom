@@ -26,7 +26,7 @@ namespace FastTelecom.Infrastructure
             HttpClientHandler MakeHandler() => new()
             {
                 CookieContainer = cookieContainer,
-                UseCookies      = true,
+                UseCookies = true,
             };
 
             services.AddHttpClient<ITarasClient, TarasClient>(ConfigureClient)
