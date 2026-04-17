@@ -275,7 +275,7 @@ namespace FastTelecom.Application.Tests
 
             var result = await _sut.GetActiveBundlesAsync();
 
-            Assert.Equal("—", result.Bundles[0].ExpiryDate);
+            Assert.Equal("-", result.Bundles[0].ExpiryDate);
         }
 
         [Fact]

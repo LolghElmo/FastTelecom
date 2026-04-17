@@ -7,5 +7,10 @@
   <Folder Name="/src/ui/">
     <Project Path="FastTelecom.AvaloniaUI/FastTelecom.AvaloniaUI.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="FastTelecom.Application.Tests/FastTelecom.Application.Tests.csproj" />
+    <Project Path="FastTelecom.Domain.Tests/FastTelecom.Domain.Tests.csproj" />
+    <Project Path="FastTelecom.Infrastructure.Tests/FastTelecom.Infrastructure.Tests.csproj" />
+  </Folder>
+  <Project Path="build/_build.csproj" />
 </Solution>
