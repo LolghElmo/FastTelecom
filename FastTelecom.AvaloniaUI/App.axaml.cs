@@ -53,7 +53,7 @@ namespace FastTelecom.AvaloniaUI
                 var saved = credentialStore.TryLoad();
                 if (saved.HasValue)
                 {
-                    // Saved credentials found — show the login page and attempt silent login
+                    // Saved credentials found - show the login page and attempt silent login
                     _ = mainVm.TryAutoLoginAsync(saved.Value.Username, saved.Value.Password);
                 }
                 else
