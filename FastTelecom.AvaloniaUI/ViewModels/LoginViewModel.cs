@@ -115,7 +115,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
                     AttemptMessage = attempt == 1
                         ? "Connecting to server…"
-                        : $"API not responding - Retrying ({attempt} of {MaxAttempts})…";
+                        : $"API not responding — Retrying ({attempt} of {MaxAttempts})…";
 
                     if (attempt > 1)
                         await Task.Delay(RetryDelayMs, ct);

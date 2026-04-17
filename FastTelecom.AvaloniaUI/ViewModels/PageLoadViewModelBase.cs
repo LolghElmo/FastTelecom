@@ -28,7 +28,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 
             IsLoading = false;   
             HasFailed = false;
-            LoadingMessage = $"1 / {MaxAttempts} - Connecting to server…";
+            LoadingMessage = $"1 / {MaxAttempts} — Connecting to server…";
 
             bool succeeded = false;
             bool cancelled = false;
@@ -59,7 +59,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
                     {
                         ct.ThrowIfCancellationRequested();
 
-                        LoadingMessage = $"{attempt} / {MaxAttempts} - Retrying…";
+                        LoadingMessage = $"{attempt} / {MaxAttempts} — Retrying…";
                         await Task.Delay(RetryDelayMs, ct);
 
                         bool ok;

@@ -183,7 +183,7 @@ namespace FastTelecom.Application.Services
         private static string FormatDateStr(string? raw)
         {
             var dt = ParseDate(raw);
-            return dt.HasValue ? dt.Value.ToString("MMM d, yyyy") : "-";
+            return dt.HasValue ? dt.Value.ToString("MMM d, yyyy") : "—";
         }
     }
 }

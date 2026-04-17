@@ -7,17 +7,17 @@ namespace FastTelecom.AvaloniaUI.ViewModels
 {
     public partial class DashboardViewModel : ViewModelBase
     {
-        [ObservableProperty] private string _subscriberId = "-";
+        [ObservableProperty] private string _subscriberId = "—";
         [ObservableProperty] private bool _isActive;
-        [ObservableProperty] private string _effectTime = "-";
-        [ObservableProperty] private string _expireTime = "-";
-        [ObservableProperty] private string _firstUseTime = "-";
-        [ObservableProperty] private string _lastUseEndTime = "-";
-        [ObservableProperty] private string _lastUseRelative = "-";
+        [ObservableProperty] private string _effectTime = "—";
+        [ObservableProperty] private string _expireTime = "—";
+        [ObservableProperty] private string _firstUseTime = "—";
+        [ObservableProperty] private string _lastUseEndTime = "—";
+        [ObservableProperty] private string _lastUseRelative = "—";
 
         public void Load(SubscriberDto subscriber)
         {
-            SubscriberId = subscriber.SubscriberID ?? "-";
+            SubscriberId = subscriber.SubscriberID ?? "—";
             IsActive = subscriber.Status == 0;
 
             EffectTime = FormatDate(subscriber.EffectTime);
@@ -25,8 +25,8 @@ namespace FastTelecom.AvaloniaUI.ViewModels
             FirstUseTime = FormatDate(subscriber.FirstUseTime);
 
             var lastUsed = ParseDate(subscriber.LastUseEndTime);
-            LastUseEndTime = lastUsed.HasValue ? lastUsed.Value.ToString("MMM dd, yyyy") : "-";
-            LastUseRelative = lastUsed.HasValue ? ToRelativeTime(lastUsed.Value) : "-";
+            LastUseEndTime = lastUsed.HasValue ? lastUsed.Value.ToString("MMM dd, yyyy") : "—";
+            LastUseRelative = lastUsed.HasValue ? ToRelativeTime(lastUsed.Value) : "—";
         }
 
         private static DateTime? ParseDate(string? raw)
@@ -40,7 +40,7 @@ namespace FastTelecom.AvaloniaUI.ViewModels
         private static string FormatDate(string? raw)
         {
             var dt = ParseDate(raw);
-            return dt.HasValue ? dt.Value.ToString("MMM dd, yyyy") : "-";
+            return dt.HasValue ? dt.Value.ToString("MMM dd, yyyy") : "—";
         }
 
         private static string ToRelativeTime(DateTime dt)
