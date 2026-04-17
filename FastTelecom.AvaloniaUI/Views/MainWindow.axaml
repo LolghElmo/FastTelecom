@@ -204,7 +204,7 @@
                                MaxWidth="280"
                                TextWrapping="Wrap">
                         The server didn't respond after 5 attempts. This could be a
-                        temporary outage or a network issue on your end — please check
+                        temporary outage or a network issue on your end - please check
                         your connection and try again.
                     </TextBlock>
                     <Button Classes="overlay-retry"
