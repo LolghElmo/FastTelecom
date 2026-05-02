@@ -94,3 +94,13 @@ jobs:
           files: |
             releases/*
           generate_release_notes: true
+          body: |
+            ## Download
+
+            | Platform | Download |
+            |----------|----------|
+            | Windows (installer) | [`FastTelecom-win-Setup.exe`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-win-Setup.exe) |
+            | Windows (portable) | [`FastTelecom-win-Portable.zip`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-win-Portable.zip) |
+            | Linux | [`FastTelecom.AppImage`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom.AppImage) |
+
+            > Other files are for auto-updates and can be ignored.
