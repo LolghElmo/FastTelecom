@@ -86,9 +86,13 @@ class Build : NukeBuild
         .Requires(() => Version)
         .Executes(() =>
         {
-            var vpkArgs = Runtime.StartsWith("linux")
-                ? $"[linux] pack --packId FastTelecom --packVersion {Version} --channel linux --packDir {PublishDir} --outputDir {ReleasesDir}"
-                : $"pack --packId FastTelecom --packVersion {Version} --packDir {PublishDir} --outputDir {ReleasesDir}";
+            string vpkArgs;
+            if (Runtime.StartsWith("linux"))
+                vpkArgs = $"[linux] pack --packId FastTelecom --packVersion {Version} --channel linux --packDir {PublishDir} --outputDir {ReleasesDir}";
+            else if (Runtime.StartsWith("osx"))
+                vpkArgs = $"pack --packId FastTelecom --packVersion {Version} --channel osx --runtime {Runtime} --packDir {PublishDir} --outputDir {ReleasesDir}";
+            else
+                vpkArgs = $"pack --packId FastTelecom --packVersion {Version} --packDir {PublishDir} --outputDir {ReleasesDir}";
 
             ProcessTasks.StartProcess(
                 "vpk",
