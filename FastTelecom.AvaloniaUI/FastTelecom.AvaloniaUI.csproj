@@ -8,6 +8,7 @@
     <ApplicationIcon Condition="Exists('Assets\icon.ico')">Assets\icon.ico</ApplicationIcon>
 	<MinVerTagPrefix>v</MinVerTagPrefix>
     <AssemblyName>FastTelecom</AssemblyName>
+    <RuntimeIdentifiers>osx-x64;osx-arm64;linux-x64;win-x64</RuntimeIdentifiers>
     <PublishSingleFile>true</PublishSingleFile>
   </PropertyGroup>
 
