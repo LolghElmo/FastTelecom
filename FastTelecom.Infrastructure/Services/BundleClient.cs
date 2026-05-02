@@ -65,7 +65,7 @@ namespace FastTelecom.Infrastructure.Services
                 if (!response.IsSuccessStatusCode)
                     return null;
 
-                return JsonSerializer.Deserialize<BundlesApiResponse>(body.Trim(), JsonOpts);
+                return JsonSerializer.Deserialize<BundlesApiResponse>(StripBom(body), JsonOpts);
             }
             catch (OperationCanceledException) { throw; }
             catch { return null; }
@@ -73,15 +73,20 @@ namespace FastTelecom.Infrastructure.Services
 
         public async Task<PurchaseApiResponse> PurchaseBundleAsync(
             string username,
+            string password,
             long basic,
             long bundleId,
             CancellationToken cancellationToken = default)
         {
             var rand = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+            var uNC = _crypto.Encrypt(username);
+            var uPC = _crypto.Encrypt("TWAB4315!!!");
 
             var asRequest = JsonSerializer.Serialize(new
             {
                 user = username,
+                uNC,
+                uPC,
                 Basic = basic.ToString(),
                 Products = new[] { bundleId },
             });
@@ -115,8 +120,8 @@ namespace FastTelecom.Infrastructure.Services
                         Error = $"HTTP {(int)response.StatusCode}: {response.ReasonPhrase}",
                     };
 
-                // Response: {"response":[{"productID":"...","phone":"...","code":200,"result":"...","msg":"..."}]}
-                var wrapper = JsonSerializer.Deserialize<PurchaseResponseWrapper>(body.Trim(), JsonOpts);
+                var trimmed = StripBom(body).TrimStart('[').TrimEnd(']').Trim();
+                var wrapper = JsonSerializer.Deserialize<PurchaseResponseWrapper>(trimmed, JsonOpts);
                 var raw = wrapper?.Response?.FirstOrDefault();
 
                 return new PurchaseApiResponse
@@ -140,7 +145,9 @@ namespace FastTelecom.Infrastructure.Services
             }
         }
 
-        // Helpers 
+        private static string StripBom(string s) => s.Trim().TrimStart('﻿').Trim();
+
+        // Helpers
 
         private static readonly Random _rng = new();
 

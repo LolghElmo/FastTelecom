@@ -107,7 +107,7 @@ namespace FastTelecom.Application.Tests
             _session.Password = "testpass";
 
             _bundleClient
-                .PurchaseBundleAsync("testuser", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
+                .PurchaseBundleAsync("testuser", "testpass", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
                 .Returns(new PurchaseApiResponse
                 {
                     Success = true,
@@ -128,7 +128,7 @@ namespace FastTelecom.Application.Tests
             _session.Password = "testpass";
 
             _bundleClient
-                .PurchaseBundleAsync("testuser", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
+                .PurchaseBundleAsync("testuser", "testpass", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
                 .Returns(new PurchaseApiResponse
                 {
                     Success = true,
@@ -148,7 +148,7 @@ namespace FastTelecom.Application.Tests
             _session.Password = "testpass";
 
             _bundleClient
-                .PurchaseBundleAsync("testuser", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
+                .PurchaseBundleAsync("testuser", "testpass", Arg.Any<long>(), Arg.Any<long>(), Arg.Any<CancellationToken>())
                 .Returns(new PurchaseApiResponse
                 {
                     Success = false,

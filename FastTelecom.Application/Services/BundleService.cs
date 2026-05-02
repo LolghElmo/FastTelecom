@@ -55,13 +55,14 @@ namespace FastTelecom.Application.Services
             long basic,
             CancellationToken ct = default)
         {
-            if (string.IsNullOrWhiteSpace(_session.Username))
+            if (string.IsNullOrWhiteSpace(_session.Username) ||
+                string.IsNullOrWhiteSpace(_session.Password))
                 return PurchaseResultDto.Fail("Session expired. Please log in again.");
 
             try
             {
                 var response = await _client.PurchaseBundleAsync(
-                    _session.Username, basic, bundleId, ct);
+                    _session.Username, _session.Password, basic, bundleId, ct);
 
                 if (!response.Success)
                     return PurchaseResultDto.Fail(response.Error ?? "Purchase failed.");
@@ -108,6 +109,7 @@ namespace FastTelecom.Application.Services
                 };
             }
             catch (OperationCanceledException) { throw; }
+
             catch (Exception ex) { return ActiveBundlesResultDto.Fail(ex.Message); }
         }
         private static ActiveBundleDto MapBundle(Domain.Models.ActiveBundle b)

@@ -11,6 +11,7 @@ namespace FastTelecom.Domain.Interfaces
 
         Task<PurchaseApiResponse> PurchaseBundleAsync(
             string username,
+            string password,
             long basic,
             long bundleId,
             CancellationToken cancellationToken = default);
