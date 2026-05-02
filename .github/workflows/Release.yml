@@ -140,12 +140,10 @@ jobs:
             ./FastTelecom.AppImage
             ```
 
-            **macOS:** Run the `.pkg` installer. If macOS blocks it:
-            1. Open **System Settings** → **Privacy & Security**
-            2. Scroll down and click **Open Anyway** next to the FastTelecom message
-            — or run in Terminal:
+            **macOS:** If macOS blocks the installer:
             ```bash
-            sudo xattr -cr /Applications/FastTelecom.app
+            sudo xattr -cr ~/Downloads/FastTelecom-osx-Setup.pkg
             ```
+            Then double-click the `.pkg` to install.
 
             > Other files listed below are for auto-updates and can be ignored.
