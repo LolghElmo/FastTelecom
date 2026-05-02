@@ -72,9 +72,6 @@ jobs:
   build-macos:
     name: Build macOS
     runs-on: macos-latest
-    strategy:
-      matrix:
-        runtime: [osx-x64, osx-arm64]
     steps:
       - uses: actions/checkout@v6
         with:
@@ -94,12 +91,12 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - name: Run Nuke Pack
-        run: ./build.sh Pack --version ${{ steps.version.outputs.VERSION }} --runtime ${{ matrix.runtime }}
+        run: ./build.sh Pack --version ${{ steps.version.outputs.VERSION }} --runtime osx-arm64
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: releases-${{ matrix.runtime }}
+          name: releases-osx
           path: releases/*
 
   release:
@@ -129,8 +126,7 @@ jobs:
             | Windows (installer) | [`FastTelecom-win-Setup.exe`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-win-Setup.exe) |
             | Windows (portable) | [`FastTelecom-win-Portable.zip`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-win-Portable.zip) |
             | Linux | [`FastTelecom.AppImage`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom.AppImage) |
-            | macOS (Apple Silicon) | [`FastTelecom-osx-arm64-Setup.pkg`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-osx-arm64-Setup.pkg) |
-            | macOS (Intel) | [`FastTelecom-osx-x64-Setup.pkg`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-osx-x64-Setup.pkg) |
+            | macOS | [`FastTelecom-osx-Setup.pkg`](https://github.com/LolghElmo/FastTelecom/releases/download/${{ github.ref_name }}/FastTelecom-osx-Setup.pkg) |
 
             ---
 
