@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    name: Build & Release
+  build-windows:
+    name: Build Windows
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6
@@ -31,7 +31,60 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - name: Run Nuke Pack
-        run: ./build.cmd Pack --version ${{ steps.version.outputs.VERSION }}
+        run: ./build.cmd Pack --version ${{ steps.version.outputs.VERSION }} --runtime win-x64
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: releases-win
+          path: releases/*
+
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Install Velopack CLI
+        run: dotnet tool install -g vpk
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Run Nuke Pack
+        run: ./build.sh Pack --version ${{ steps.version.outputs.VERSION }} --runtime linux-x64
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: releases-linux
+          path: releases/*
+
+  release:
+    name: Create GitHub Release
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: releases-win
+          path: releases
+
+      - name: Download Linux artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: releases-linux
+          path: releases
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2

@@ -27,6 +27,8 @@ class Build : NukeBuild
     AbsolutePath ReleasesDir => RootDirectory / "releases";
     [Parameter("Version for Velopack packaging")]
     readonly string Version;
+    [Parameter("Target runtime identifier (e.g. win-x64, linux-x64)")]
+    readonly string Runtime = "win-x64";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -73,7 +75,7 @@ class Build : NukeBuild
             DotNetPublish(_ => _
                 .SetProject(AvaloniaProject)
                 .SetConfiguration(Configuration.Release)
-                .SetRuntime("win-x64")
+                .SetRuntime(Runtime)
                 .SetSelfContained(true)
                 .SetOutput(PublishDir)
                 .EnableNoRestore());
@@ -84,12 +86,14 @@ class Build : NukeBuild
         .Requires(() => Version)
         .Executes(() =>
         {
-            // Velopack package 
+            var vpkArgs = Runtime.StartsWith("linux")
+                ? $"[linux] pack --packId FastTelecom --packVersion {Version} --channel linux --packDir {PublishDir} --outputDir {ReleasesDir}"
+                : $"pack --packId FastTelecom --packVersion {Version} --packDir {PublishDir} --outputDir {ReleasesDir}";
+
             ProcessTasks.StartProcess(
                 "vpk",
-                $"pack --packId FastTelecom --packVersion {Version} --packDir {PublishDir} --outputDir {ReleasesDir}",
+                vpkArgs,
                 workingDirectory: RootDirectory
             ).AssertZeroExitCode();
-
         });
 }
